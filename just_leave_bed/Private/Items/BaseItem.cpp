@@ -5,6 +5,9 @@
 ABaseItem::ABaseItem()
 {
 	PrimaryActorTick.bCanEverTick = true;
+
+	ItemMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ItemMesh"));
+	RootComponent = ItemMesh;
 }
 
 void ABaseItem::BeginPlay()
