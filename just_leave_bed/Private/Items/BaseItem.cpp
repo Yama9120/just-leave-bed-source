@@ -12,7 +12,16 @@ void ABaseItem::BeginPlay()
 	Super::BeginPlay();
 }
 
+float ABaseItem::TransformedSin()
+{
+	return Amplitude * FMath::Sin(RunningTime * TimeConstant);
+}
+
 void ABaseItem::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	RunningTime += DeltaTime;
+
+	AddActorWorldOffset(FVector(0.f, 0.f, TransformedSin()));
 }
