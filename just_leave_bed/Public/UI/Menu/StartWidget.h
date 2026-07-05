@@ -6,12 +6,23 @@
 #include "Blueprint/UserWidget.h"
 #include "StartWidget.generated.h"
 
+class UButton;
+
 /**
- * 
+ *
  */
 UCLASS()
 class JUST_LEAVE_BED_API UStartWidget : public UUserWidget
 {
 	GENERATED_BODY()
-	
+
+protected:
+	void NativeConstruct() override;
+
+private:
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<UButton> ButtonPlay;
+
+	UFUNCTION()
+	void OnButtonPlayClicked();
 };
