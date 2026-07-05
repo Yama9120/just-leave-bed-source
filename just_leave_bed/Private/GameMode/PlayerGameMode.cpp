@@ -14,7 +14,7 @@ void APlayerGameMode::BeginPlay()
 		{
 			StartWidget->AddToViewport();
 
-			// InputMode‚ðUI‚ÉØ‚è‘Ö‚¦‚é
+			// InputModeã‚’UIã«åˆ‡ã‚Šæ›¿ãˆã‚‹
 			APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
 			if (PlayerController)
 			{

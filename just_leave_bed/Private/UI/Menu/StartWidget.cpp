@@ -16,10 +16,10 @@ void UStartWidget::NativeConstruct()
 
 void UStartWidget::OnButtonPlayClicked()
 {
-	// Widget‚Ì”ñ•\¦
+	// Widgetã®éè¡¨ç¤º
 	RemoveFromParent();
 
-	// InputMode‚ğGame‚ÉØ‚è‘Ö‚¦‚é
+	// InputModeã‚’Gameã«åˆ‡ã‚Šæ›¿ãˆã‚‹
 	APlayerController* PlayerController = GetOwningPlayer();
 	if (PlayerController)
 	{
@@ -31,7 +31,7 @@ void UStartWidget::OnButtonPlayClicked()
 
 void UStartWidget::OnButtonQuitClicked()
 {
-	// PlayerController‚ğæ“¾‚µ‚ÄƒQ[ƒ€‚ğI—¹‚·‚é
+	// PlayerControllerã‚’å–å¾—ã—ã¦ã‚²ãƒ¼ãƒ ã‚’çµ‚äº†ã™ã‚‹
 	if (APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0))
 	{
 		UKismetSystemLibrary::QuitGame(GetWorld(), PlayerController, EQuitPreference::Quit, false);
