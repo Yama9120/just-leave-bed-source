@@ -13,6 +13,15 @@ void APlayerGameMode::BeginPlay()
 		if (StartWidget)
 		{
 			StartWidget->AddToViewport();
+
+			// InputMode‚ðUI‚ÉØ‚è‘Ö‚¦‚é
+			APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
+			if (PlayerController)
+			{
+				FInputModeUIOnly InputMode;
+				PlayerController->SetInputMode(InputMode);
+				PlayerController->bShowMouseCursor = true;
+			}
 		}
 	}
 }

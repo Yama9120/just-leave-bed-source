@@ -19,7 +19,7 @@ void UStartWidget::OnButtonPlayClicked()
 	// Widget‚Ì”ñ•\¦
 	RemoveFromParent();
 
-	// InputMode‚ğŒ³‚É–ß‚·
+	// InputMode‚ğGame‚ÉØ‚è‘Ö‚¦‚é
 	APlayerController* PlayerController = GetOwningPlayer();
 	if (PlayerController)
 	{
