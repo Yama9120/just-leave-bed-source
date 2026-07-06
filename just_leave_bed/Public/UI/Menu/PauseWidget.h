@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Blueprint/UserWidget.h"
-#include "PoseWidget.generated.h"
+#include "UI/Menu/BaseWidget.h"
+#include "PauseWidget.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class JUST_LEAVE_BED_API UPoseWidget : public UUserWidget
+class JUST_LEAVE_BED_API UPauseWidget : public UBaseWidget
 {
 	GENERATED_BODY()
 	
