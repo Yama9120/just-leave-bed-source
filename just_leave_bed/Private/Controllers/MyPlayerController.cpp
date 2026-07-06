@@ -18,9 +18,15 @@ void AMyPlayerController::SetupInputComponent()
 
 void AMyPlayerController::PauseGame()
 {
-	// ゲームがすでにポーズされている場合は何もしない
+	// ゲームがすでにポーズされている場合はポーズ画面を閉じる
 	if (UGameplayStatics::IsGamePaused(GetWorld()))
 	{
+		PauseWidget->RemoveFromParent();
+		FInputModeGameOnly InputMode; // InputModeをGameに切り替える
+		SetInputMode(InputMode);
+		bShowMouseCursor = false;
+		UGameplayStatics::SetGamePaused(GetWorld(), false);
+
 		return;
 	}
 
@@ -30,6 +36,12 @@ void AMyPlayerController::PauseGame()
 		if (PauseWidget)
 		{
 			PauseWidget->AddToViewport();
+
+			// InputModeをGameAndUIに切り替え、ポーズボタンの入力を受け付けるようにする
+			FInputModeGameAndUI InputMode;
+			SetInputMode(InputMode);
+			bShowMouseCursor = true;
+
 			// ゲームをポーズする（ゲームの処理を止める）
 			UGameplayStatics::SetGamePaused(GetWorld(), true);
 		}
