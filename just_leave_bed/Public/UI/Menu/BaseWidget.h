@@ -18,6 +18,8 @@ class JUST_LEAVE_BED_API UBaseWidget : public UUserWidget
 
 protected:
 	virtual void NativeConstruct() override;
+	void SetUIMode();
+	void SetGameMode();
 
 	UPROPERTY(meta = (BindWidgetOptional))
 	TObjectPtr<UButton> ButtonPlay;

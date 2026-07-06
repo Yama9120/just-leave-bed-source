@@ -13,15 +13,6 @@ void APlayerGameMode::BeginPlay()
 		if (StartWidget)
 		{
 			StartWidget->AddToViewport();
-
-			// InputModeをUIに切り替える
-			APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
-			if (PlayerController)
-			{
-				FInputModeUIOnly InputMode;
-				PlayerController->SetInputMode(InputMode);
-				PlayerController->bShowMouseCursor = true;
-			}
 		}
 	}
 }

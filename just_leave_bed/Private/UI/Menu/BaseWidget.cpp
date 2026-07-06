@@ -9,6 +9,9 @@ void UBaseWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
+	// InputModeをUIに切り替える
+	SetUIMode();
+
 	if (ButtonPlay)
 	{
 		ButtonPlay->OnClicked.AddUniqueDynamic(this, &UBaseWidget::OnButtonPlayClicked);
@@ -19,19 +22,35 @@ void UBaseWidget::NativeConstruct()
 	}
 }
 
+void UBaseWidget::SetUIMode()
+{
+	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
+	if (PlayerController)
+	{
+		FInputModeUIOnly InputMode; // InputModeをUIに切り替える
+		PlayerController->SetInputMode(InputMode);
+		PlayerController->bShowMouseCursor = true;
+	}
+}
+
+void UBaseWidget::SetGameMode()
+{
+	APlayerController* PlayerController = GetOwningPlayer();
+	if (PlayerController)
+	{
+		FInputModeGameOnly InputMode; // InputModeをGameに切り替える
+		PlayerController->SetInputMode(InputMode);
+		PlayerController->bShowMouseCursor = false;
+	}
+}
+
 void UBaseWidget::OnButtonPlayClicked()
 {
 	// Widgetの非表示
 	RemoveFromParent();
 
 	// InputModeをGameに切り替える
-	APlayerController* PlayerController = GetOwningPlayer();
-	if (PlayerController)
-	{
-		FInputModeGameOnly InputMode;
-		PlayerController->SetInputMode(InputMode);
-		PlayerController->bShowMouseCursor = false;
-	}
+	SetGameMode();
 }
 
 void UBaseWidget::OnButtonQuitClicked()
