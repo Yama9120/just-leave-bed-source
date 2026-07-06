@@ -51,6 +51,9 @@ void UBaseWidget::OnButtonPlayClicked()
 
 	// InputModeをGameに切り替える
 	SetGameMode();
+
+	// ゲームのポーズを解除する（止めていたゲームの再開）
+	UGameplayStatics::SetGamePaused(GetWorld(), false);
 }
 
 void UBaseWidget::OnButtonQuitClicked()
