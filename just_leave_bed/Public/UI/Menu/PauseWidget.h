@@ -7,11 +7,13 @@
 #include "PauseWidget.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
 class JUST_LEAVE_BED_API UPauseWidget : public UBaseWidget
 {
 	GENERATED_BODY()
-	
+
+protected:
+	virtual void OnButtonReStartClicked() override;
 };

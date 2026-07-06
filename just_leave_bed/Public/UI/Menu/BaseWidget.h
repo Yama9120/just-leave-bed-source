@@ -25,9 +25,13 @@ protected:
 	TObjectPtr<UButton> ButtonPlay;
 	UPROPERTY(meta = (BindWidgetOptional))
 	TObjectPtr<UButton> ButtonQuit;
+	UPROPERTY(meta = (BindWidgetOptional))
+	TObjectPtr<UButton> ButtonReStart;
 
 	UFUNCTION()
 	virtual void OnButtonPlayClicked();
 	UFUNCTION()
 	virtual void OnButtonQuitClicked();
+	UFUNCTION()
+	virtual void OnButtonReStartClicked();
 };

@@ -20,6 +20,10 @@ void UBaseWidget::NativeConstruct()
 	{
 		ButtonQuit->OnClicked.AddUniqueDynamic(this, &UBaseWidget::OnButtonQuitClicked);
 	}
+	if (ButtonReStart)
+	{
+		ButtonReStart->OnClicked.AddUniqueDynamic(this, &UBaseWidget::OnButtonReStartClicked);
+	}
 }
 
 void UBaseWidget::SetUIMode()
@@ -63,4 +67,8 @@ void UBaseWidget::OnButtonQuitClicked()
 	{
 		UKismetSystemLibrary::QuitGame(GetWorld(), PlayerController, EQuitPreference::Quit, false);
 	}
+}
+
+void UBaseWidget::OnButtonReStartClicked()
+{
 }
