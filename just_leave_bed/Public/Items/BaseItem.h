@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "BaseItem.generated.h"
 
+class UBoxComponent;
+
 UCLASS()
 class JUST_LEAVE_BED_API ABaseItem : public AActor
 {
@@ -26,10 +28,16 @@ protected:
 	UFUNCTION(BlueprintPure)
 	float TransformedSin();
 
+	UFUNCTION()
+	virtual void OnBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	float RunningTime = 0.f;
 
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* ItemMesh;
+
+	UPROPERTY(VisibleAnywhere)
+	UBoxComponent* Box;
 };
