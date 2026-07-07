@@ -36,5 +36,9 @@ void ABaseItem::Tick(float DeltaTime)
 
 	RunningTime += DeltaTime;
 
-	AddActorWorldOffset(FVector(0.f, 0.f, TransformedSin()));
+	// オプションで上下に浮遊するようにアイテムを移動させる
+	if (bEnableFloating)
+	{
+		AddActorWorldOffset(FVector(0.f, 0.f, TransformedSin()));
+	}
 }

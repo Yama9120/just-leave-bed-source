@@ -20,6 +20,8 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	UPROPERTY(EditAnywhere, Category = "Sine Parameters")
+	bool bEnableFloating = true;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sine Parameters")
 	float Amplitude = 0.25f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sine Parameters")
