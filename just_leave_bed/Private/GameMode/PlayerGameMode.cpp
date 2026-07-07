@@ -26,6 +26,15 @@ void APlayerGameMode::ShowResultWidget()
 		if (ResultWidget)
 		{
 			ResultWidget->AddToViewport();
+
+			APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
+			if (PlayerController)
+			{
+				FInputModeUIOnly InputMode; // InputModeをUIに切り替える
+				PlayerController->SetInputMode(InputMode);
+				PlayerController->SetIgnoreMoveInput(true); // キャラクターの移動を無効化（スタート画面ではそれまでの入力がなかったので表面化しなかった）
+				PlayerController->bShowMouseCursor = true;
+			}
 		}
 	}
 }
