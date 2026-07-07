@@ -2,6 +2,7 @@
 
 #include "GameMode/PlayerGameMode.h"
 #include "UI/Menu/StartWidget.h"
+#include "UI/Menu/ResultWidget.h"
 
 void APlayerGameMode::BeginPlay()
 {
@@ -13,6 +14,18 @@ void APlayerGameMode::BeginPlay()
 		if (StartWidget)
 		{
 			StartWidget->AddToViewport();
+		}
+	}
+}
+
+void APlayerGameMode::ShowResultWidget()
+{
+	if (ResultWidgetClass)
+	{
+		ResultWidget = CreateWidget<UResultWidget>(GetWorld(), ResultWidgetClass);
+		if (ResultWidget)
+		{
+			ResultWidget->AddToViewport();
 		}
 	}
 }

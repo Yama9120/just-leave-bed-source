@@ -71,4 +71,12 @@ void UBaseWidget::OnButtonQuitClicked()
 
 void UBaseWidget::OnButtonReStartClicked()
 {
+	// ゲームのポーズを解除する（止めていたゲームの再開）
+	UGameplayStatics::SetGamePaused(GetWorld(), false);
+
+	// 現在のレベル名を取得（今回は一つのレベルで行うので、現在のレベルが分かれば良い）
+	FString CurrentLevelName = UGameplayStatics::GetCurrentLevelName(GetWorld());
+
+	// 現在のレベルを再読み込みする
+	UGameplayStatics::OpenLevel(GetWorld(), FName(*CurrentLevelName));
 }

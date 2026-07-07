@@ -2,6 +2,8 @@
 
 #include "Items/Goal.h"
 #include "Characters/PlayerCharacter.h"
+#include "GameMode/PlayerGameMode.h"
+#include "Kismet/GameplayStatics.h"
 
 void AGoal::OnBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
@@ -9,10 +11,12 @@ void AGoal::OnBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* Other
 	APlayerCharacter* Player = Cast<APlayerCharacter>(OtherActor);
 	if (Player)
 	{
-		const FString OtherActorName = OtherActor->GetName();
-		if (GEngine)
+		// ゴールに到達した場合の処理
+		APlayerGameMode* GameMode = Cast<APlayerGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+		if (GameMode)
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Goal: %s"), *OtherActorName));
+			// ゴールに到達したことをゲームモードに通知
+			GameMode->ShowResultWidget();
 		}
 	}
 }
