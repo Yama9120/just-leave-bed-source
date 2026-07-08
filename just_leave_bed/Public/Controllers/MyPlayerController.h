@@ -8,6 +8,16 @@
 
 class UInputAction;
 class UPauseWidget;
+class UBaseWidget;
+
+// 入力モードの種類を列挙型で定義
+UENUM(BlueprintType)
+enum class EMenuInputMode : uint8
+{
+	GameOnly,
+	UIOnly,
+	GameAndUI
+};
 
 /**
  *
@@ -16,6 +26,11 @@ UCLASS()
 class JUST_LEAVE_BED_API AMyPlayerController : public APlayerController
 {
 	GENERATED_BODY()
+
+public:
+	UUserWidget* OpenMenuWidget(TSubclassOf<UBaseWidget> WidgetClass);
+	void CloseMenuWidget();
+	void ApplyMenuInputMode(EMenuInputMode InputMode, bool bPause);
 
 protected:
 	virtual void SetupInputComponent() override;
@@ -27,9 +42,11 @@ protected:
 	TSubclassOf<UPauseWidget> PauseWidgetClass;
 
 private:
+	void PauseGame();
+
 	UPROPERTY()
 	UPauseWidget* PauseWidget;
 
-private:
-	void PauseGame();
+	UPROPERTY()
+	UUserWidget* ActiveMenuWidget;
 };
