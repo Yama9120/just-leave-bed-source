@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "Controllers/MyPlayerController.h"
 #include "BaseWidget.generated.h"
 
 class UButton;
@@ -15,6 +16,14 @@ UCLASS()
 class JUST_LEAVE_BED_API UBaseWidget : public UUserWidget
 {
 	GENERATED_BODY()
+
+public:
+	// このウィジェットが開かれたとき、どの入力モードに切り替えるかを指定
+	UPROPERTY(EditDefaultsOnly, Category = "Menu")
+	EMenuInputMode DesiredInputMode = EMenuInputMode::UIOnly;
+	// このウィジェットが開かれたとき、ゲームを止めるかどうかを指定
+	UPROPERTY(EditDefaultsOnly, Category = "Menu")
+	bool bPauseGameWhileOpen = false;
 
 protected:
 	virtual void NativeConstruct() override;

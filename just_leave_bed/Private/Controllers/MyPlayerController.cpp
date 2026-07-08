@@ -22,7 +22,7 @@ UUserWidget* AMyPlayerController::OpenMenuWidget(TSubclassOf<UBaseWidget> Widget
 	ActiveMenuWidget = Widget;
 
 	// 入力モード、ポーズ設定を反映する
-	// ApplyMenuInputMode();
+	ApplyMenuInputMode(Widget->DesiredInputMode, Widget->bPauseGameWhileOpen);
 
 	return Widget;
 }
