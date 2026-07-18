@@ -8,6 +8,7 @@
 
 class UStartWidget;
 class UResultWidget;
+class UBaseWidget;
 
 /**
  *
@@ -28,11 +29,4 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "UI")
 	TSubclassOf<UResultWidget> ResultWidgetClass;
-
-private:
-	UPROPERTY()
-	UStartWidget* StartWidget;
-
-	UPROPERTY()
-	UResultWidget* ResultWidget;
 };
