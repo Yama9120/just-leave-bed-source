@@ -16,7 +16,16 @@ UUserWidget* AMyPlayerController::OpenMenuWidget(TSubclassOf<UBaseWidget> Widget
 		return nullptr;
 	}
 
+	if (!WidgetClass)
+	{
+		return nullptr;
+	}
+
 	UBaseWidget* Widget = CreateWidget<UBaseWidget>(this, WidgetClass);
+	if (!Widget)
+	{
+		return nullptr;
+	}
 
 	Widget->AddToViewport();
 	ActiveMenuWidget = Widget;
@@ -73,8 +82,6 @@ void AMyPlayerController::ApplyMenuInputMode(EMenuInputMode InputMode, bool bPau
 			FInputModeGameAndUI InputMode;
 			SetInputMode(InputMode);
 			bShowMouseCursor = true;
-			SetIgnoreMoveInput(false);
-			SetIgnoreLookInput(false);
 			break;
 		}
 	}
@@ -98,29 +105,9 @@ void AMyPlayerController::PauseGame()
 	// ゲームがすでにポーズされている場合はポーズ画面を閉じる
 	if (UGameplayStatics::IsGamePaused(GetWorld()))
 	{
-		PauseWidget->RemoveFromParent();
-		FInputModeGameOnly InputMode; // InputModeをGameに切り替える
-		SetInputMode(InputMode);
-		bShowMouseCursor = false;
-		UGameplayStatics::SetGamePaused(GetWorld(), false);
-
+		CloseMenuWidget();
 		return;
 	}
 
-	if (PauseWidgetClass)
-	{
-		PauseWidget = CreateWidget<UPauseWidget>(this, PauseWidgetClass);
-		if (PauseWidget)
-		{
-			PauseWidget->AddToViewport();
-
-			// InputModeをGameAndUIに切り替え、ポーズボタンの入力を受け付けるようにする
-			FInputModeGameAndUI InputMode;
-			SetInputMode(InputMode);
-			bShowMouseCursor = true;
-
-			// ゲームをポーズする（ゲームの処理を止める）
-			UGameplayStatics::SetGamePaused(GetWorld(), true);
-		}
-	}
+	OpenMenuWidget(PauseWidgetClass);
 }

@@ -35,14 +35,14 @@ public:
 protected:
 	virtual void SetupInputComponent() override;
 
+private:
+	void PauseGame();
+
 	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputAction* PauseAction;
 
 	UPROPERTY(EditAnywhere, Category = "UI")
 	TSubclassOf<UPauseWidget> PauseWidgetClass;
-
-private:
-	void PauseGame();
 
 	UPROPERTY()
 	UPauseWidget* PauseWidget;
