@@ -82,6 +82,8 @@ void AMyPlayerController::ApplyMenuInputMode(EMenuInputMode InputMode, bool bPau
 			FInputModeGameAndUI Mode;
 			SetInputMode(Mode);
 			bShowMouseCursor = true;
+			SetIgnoreMoveInput(false);
+			SetIgnoreLookInput(false);
 			break;
 		}
 	}
