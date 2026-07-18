@@ -59,8 +59,8 @@ void AMyPlayerController::ApplyMenuInputMode(EMenuInputMode InputMode, bool bPau
 		// GameOnly：マウスカーソルを非表示にし、移動と視点操作の入力を有効にする
 		case EMenuInputMode::GameOnly:
 		{
-			FInputModeGameOnly InputMode;
-			SetInputMode(InputMode);
+			FInputModeGameOnly Mode;
+			SetInputMode(Mode);
 			bShowMouseCursor = false;
 			SetIgnoreMoveInput(false);
 			SetIgnoreLookInput(false);
@@ -69,8 +69,8 @@ void AMyPlayerController::ApplyMenuInputMode(EMenuInputMode InputMode, bool bPau
 		// UIOnly：マウスカーソルを表示し、移動と視点操作の入力を無効にする
 		case EMenuInputMode::UIOnly:
 		{
-			FInputModeUIOnly InputMode;
-			SetInputMode(InputMode);
+			FInputModeUIOnly Mode;
+			SetInputMode(Mode);
 			bShowMouseCursor = true;
 			SetIgnoreMoveInput(true);
 			SetIgnoreLookInput(true);
@@ -79,8 +79,8 @@ void AMyPlayerController::ApplyMenuInputMode(EMenuInputMode InputMode, bool bPau
 		// GameAndUI：マウスカーソルを表示し、移動と視点操作の入力を有効にする
 		case EMenuInputMode::GameAndUI:
 		{
-			FInputModeGameAndUI InputMode;
-			SetInputMode(InputMode);
+			FInputModeGameAndUI Mode;
+			SetInputMode(Mode);
 			bShowMouseCursor = true;
 			break;
 		}

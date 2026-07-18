@@ -45,8 +45,5 @@ private:
 	TSubclassOf<UPauseWidget> PauseWidgetClass;
 
 	UPROPERTY()
-	UPauseWidget* PauseWidget;
-
-	UPROPERTY()
 	UUserWidget* ActiveMenuWidget;
 };
