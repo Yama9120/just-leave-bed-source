@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "Controllers/MyPlayerController.h"
+#include "UI/Menu/MenuTypes.h"
 #include "BaseWidget.generated.h"
 
 class UButton;
