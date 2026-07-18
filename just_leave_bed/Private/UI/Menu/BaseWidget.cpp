@@ -2,15 +2,13 @@
 
 #include "UI/Menu/BaseWidget.h"
 #include "Components/Button.h"
+#include "Controllers/MyPlayerController.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 void UBaseWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
-
-	// InputModeをUIに切り替える
-	SetUIMode();
 
 	if (ButtonPlay)
 	{
@@ -26,38 +24,13 @@ void UBaseWidget::NativeConstruct()
 	}
 }
 
-void UBaseWidget::SetUIMode()
-{
-	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
-	if (PlayerController)
-	{
-		FInputModeUIOnly InputMode; // InputModeをUIに切り替える
-		PlayerController->SetInputMode(InputMode);
-		PlayerController->bShowMouseCursor = true;
-	}
-}
-
-void UBaseWidget::SetGameMode()
-{
-	APlayerController* PlayerController = GetOwningPlayer();
-	if (PlayerController)
-	{
-		FInputModeGameOnly InputMode; // InputModeをGameに切り替える
-		PlayerController->SetInputMode(InputMode);
-		PlayerController->bShowMouseCursor = false;
-	}
-}
-
 void UBaseWidget::OnButtonPlayClicked()
 {
-	// Widgetの非表示
-	RemoveFromParent();
-
-	// InputModeをGameに切り替える
-	SetGameMode();
-
-	// ゲームのポーズを解除する（止めていたゲームの再開）
-	UGameplayStatics::SetGamePaused(GetWorld(), false);
+	AMyPlayerController* PlayerController = Cast<AMyPlayerController>(GetOwningPlayer());
+	if (PlayerController)
+	{
+		PlayerController->CloseMenuWidget();
+	}
 }
 
 void UBaseWidget::OnButtonQuitClicked()

@@ -27,8 +27,6 @@ public:
 
 protected:
 	virtual void NativeConstruct() override;
-	void SetUIMode();
-	void SetGameMode();
 
 	UPROPERTY(meta = (BindWidgetOptional))
 	TObjectPtr<UButton> ButtonPlay;
