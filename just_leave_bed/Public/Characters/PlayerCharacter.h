@@ -32,6 +32,9 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputAction* LookAction;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Character")
+	TObjectPtr<USkeletalMeshComponent> VisualMesh;
+
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
 
