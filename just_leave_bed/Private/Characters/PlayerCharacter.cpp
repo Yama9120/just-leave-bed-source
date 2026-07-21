@@ -82,11 +82,12 @@ void APlayerCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	// Strafeモードのみ（移動中：キャラを回転させる、停止中：キャラは回転させない）
-	if (RotationMode == ERotationMode::Strafe && Controller && !GetVelocity().IsNearlyZero()) // 移動中のみ処理を行う
+	const FVector HorizontalVelocity = FVector(GetVelocity().X, GetVelocity().Y, 0.f);
+	if (RotationMode == ERotationMode::Strafe && Controller && !HorizontalVelocity.IsNearlyZero()) // 移動中のみ処理を行う
 	{
 		// キャラクターの回転をコントローラーの向きに合わせる
 		const FRotator Target(0.f, Controller->GetControlRotation().Yaw, 0.f);
-		const FRotator Smoothed = FMath::RInterpTo(GetActorRotation(), Target, DeltaTime, 10.f); // 回転を滑らかにするために補間
+		const FRotator Smoothed = FMath::RInterpTo(GetActorRotation(), Target, DeltaTime, RotationInterpSpeed); // 回転を滑らかにするために補間
 		SetActorRotation(Smoothed);
 	}
 }

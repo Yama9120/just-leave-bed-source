@@ -30,6 +30,9 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	virtual void Jump() override;
 
+	UFUNCTION(BlueprintCallable, Category = "Character")
+	void SetRotationMode(ERotationMode NewRotationMode);
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -63,7 +66,4 @@ private:
 	USpringArmComponent* SpringArm;
 	UPROPERTY(VisibleAnywhere)
 	UCameraComponent* ViewCamera;
-
-	UFUNCTION(BlueprintCallable, Category = "Character")
-	void SetRotationMode(ERotationMode NewRotationMode);
 };
