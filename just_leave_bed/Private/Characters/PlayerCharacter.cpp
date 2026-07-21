@@ -23,9 +23,8 @@ APlayerCharacter::APlayerCharacter()
 
 	ViewCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("ViewCamera"));
 	ViewCamera->SetupAttachment(SpringArm);
-	ViewCamera->bUsePawnControlRotation = true;
+	ViewCamera->bUsePawnControlRotation = false;
 
-	GetCharacterMovement()->bOrientRotationToMovement = false;
 	GetCharacterMovement()->RotationRate = FRotator(0.f, 500.f, 0.f);
 
 	// 親のメッシュを非表示にして、アニメーションは常に更新するように設定（親のアニメーションを子に引き継がせるため）
@@ -40,6 +39,8 @@ APlayerCharacter::APlayerCharacter()
 void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	SetRotationMode(RotationMode);
 
 	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
 	{
@@ -80,8 +81,8 @@ void APlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	// 移動中：キャラを回転させる、停止中：キャラは回転させない
-	if (Controller && !GetVelocity().IsNearlyZero()) // 移動中のみ処理を行う
+	// Strafeモードのみ（移動中：キャラを回転させる、停止中：キャラは回転させない）
+	if (RotationMode == ERotationMode::Strafe && Controller && !GetVelocity().IsNearlyZero()) // 移動中のみ処理を行う
 	{
 		// キャラクターの回転をコントローラーの向きに合わせる
 		const FRotator Target(0.f, Controller->GetControlRotation().Yaw, 0.f);
@@ -100,4 +101,11 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &APlayerCharacter::Look);
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &APlayerCharacter::Jump);
 	}
+}
+
+void APlayerCharacter::SetRotationMode(ERotationMode NewRotationMode)
+{
+	RotationMode = NewRotationMode;
+	// キャラクターの回転モードを設定する（OrientならTrueに）
+	GetCharacterMovement()->bOrientRotationToMovement = (RotationMode == ERotationMode::Orient);
 }

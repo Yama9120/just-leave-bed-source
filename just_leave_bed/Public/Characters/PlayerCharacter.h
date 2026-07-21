@@ -12,6 +12,13 @@ class UInputAction;
 class USpringArmComponent;
 class UCameraComponent;
 
+UENUM(BlueprintType)
+enum class ERotationMode : uint8
+{
+	Orient UMETA(DisplayName = "Orient"),
+	Strafe UMETA(DisplayName = "Strafe"),
+};
+
 UCLASS()
 class JUST_LEAVE_BED_API APlayerCharacter : public ACharacter
 {
@@ -38,6 +45,16 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Character")
 	TObjectPtr<USkeletalMeshComponent> VisualMesh;
 
+	// ----------------------------------------------------------------
+	// 回転モードの設定（Orient: 移動方向に向く、Strafe: 視点方向に向く）
+	// ----------------------------------------------------------------
+
+	UPROPERTY(EditAnywhere, Category = "Movement")
+	ERotationMode RotationMode = ERotationMode::Orient;
+
+	UPROPERTY(EditAnywhere, Category = "Movement", meta = (ClampMin = "0.0"))
+	float RotationInterpSpeed = 10.f;
+
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
 
@@ -46,4 +63,7 @@ private:
 	USpringArmComponent* SpringArm;
 	UPROPERTY(VisibleAnywhere)
 	UCameraComponent* ViewCamera;
+
+	UFUNCTION(BlueprintCallable, Category = "Character")
+	void SetRotationMode(ERotationMode NewRotationMode);
 };
