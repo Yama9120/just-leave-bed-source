@@ -21,6 +21,7 @@ public:
 	APlayerCharacter();
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	virtual void Jump() override;
 
 protected:
 	virtual void BeginPlay() override;
@@ -31,6 +32,8 @@ protected:
 	UInputAction* MovementAction;
 	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputAction* LookAction;
+	UPROPERTY(EditAnywhere, Category = "Input")
+	UInputAction* JumpAction;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Character")
 	TObjectPtr<USkeletalMeshComponent> VisualMesh;
