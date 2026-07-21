@@ -6,6 +6,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 APlayerCharacter::APlayerCharacter()
 {
@@ -18,9 +19,14 @@ APlayerCharacter::APlayerCharacter()
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
 	SpringArm->SetupAttachment(GetRootComponent());
 	SpringArm->TargetArmLength = 300.f;
+	SpringArm->bUsePawnControlRotation = true;
 
 	ViewCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("ViewCamera"));
 	ViewCamera->SetupAttachment(SpringArm);
+	ViewCamera->bUsePawnControlRotation = true;
+
+	GetCharacterMovement()->bOrientRotationToMovement = false;
+	GetCharacterMovement()->RotationRate = FRotator(0.f, 500.f, 0.f);
 
 	// 親のメッシュを非表示にして、アニメーションは常に更新するように設定（親のアニメーションを子に引き継がせるため）
 	GetMesh()->SetVisibility(false);
@@ -73,6 +79,15 @@ void APlayerCharacter::Jump()
 void APlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	// 移動中：キャラを回転させる、停止中：キャラは回転させない
+	if (Controller && !GetVelocity().IsNearlyZero()) // 移動中のみ処理を行う
+	{
+		// キャラクターの回転をコントローラーの向きに合わせる
+		const FRotator Target(0.f, Controller->GetControlRotation().Yaw, 0.f);
+		const FRotator Smoothed = FMath::RInterpTo(GetActorRotation(), Target, DeltaTime, 10.f); // 回転を滑らかにするために補間
+		SetActorRotation(Smoothed);
+	}
 }
 
 void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
