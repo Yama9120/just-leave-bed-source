@@ -30,6 +30,8 @@ APlayerCharacter::APlayerCharacter()
 	// キャラクターがしゃがむことができるように設定
 	GetCharacterMovement()->NavAgentProps.bCanCrouch = true;
 	GetCharacterMovement()->MaxWalkSpeedCrouched = 140.f;
+	// しゃがんでいるときに段差から落ちることができるように設定
+	GetCharacterMovement()->bCanWalkOffLedgesWhenCrouching = true;
 
 	// 親のメッシュを非表示にして、アニメーションは常に更新するように設定（親のアニメーションを子に引き継がせるため）
 	GetMesh()->SetVisibility(false);
