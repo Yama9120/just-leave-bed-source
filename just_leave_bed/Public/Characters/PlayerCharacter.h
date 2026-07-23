@@ -58,6 +58,8 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Movement")
 	ERotationMode RotationMode = ERotationMode::Orient;
 
+	ERotationMode PreviousRotationMode = ERotationMode::Orient;
+
 	UPROPERTY(EditAnywhere, Category = "Movement", meta = (ClampMin = "0.0"))
 	float RotationInterpSpeed = 10.f;
 

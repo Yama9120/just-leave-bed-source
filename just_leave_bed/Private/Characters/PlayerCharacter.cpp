@@ -100,9 +100,15 @@ void APlayerCharacter::ToggleCrouch()
 	if (bIsCrouched)
 	{
 		UnCrouch();
+
+		// 立ち上がるときはしゃがむ前の回転モードに戻す
+		SetRotationMode(PreviousRotationMode);
 	}
 	else
 	{
+		// しゃがむ前の回転モードを保存
+		PreviousRotationMode = RotationMode;
+
 		Crouch();
 
 		// しゃがむときはキャラクターの回転モードをOrientに設定する
