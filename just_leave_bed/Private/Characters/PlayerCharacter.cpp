@@ -88,6 +88,12 @@ void APlayerCharacter::Jump()
 
 void APlayerCharacter::ToggleCrouch()
 {
+	// 空中ではしゃがめない
+	if (GetCharacterMovement()->IsFalling())
+	{
+		return;
+	}
+
 	// しゃがみ状態なら立ち上がる、立っている状態ならしゃがむ
 	if (bIsCrouched)
 	{
