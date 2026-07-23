@@ -78,6 +78,11 @@ void APlayerCharacter::Look(const FInputActionValue& Value)
 
 void APlayerCharacter::Jump()
 {
+	if (bIsCrouched)
+	{
+		UnCrouch();
+	}
+
 	Super::Jump();
 }
 
