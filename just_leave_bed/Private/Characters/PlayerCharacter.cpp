@@ -29,6 +29,7 @@ APlayerCharacter::APlayerCharacter()
 
 	// キャラクターがしゃがむことができるように設定
 	GetCharacterMovement()->NavAgentProps.bCanCrouch = true;
+	GetCharacterMovement()->MaxWalkSpeedCrouched = 140.f;
 
 	// 親のメッシュを非表示にして、アニメーションは常に更新するように設定（親のアニメーションを子に引き継がせるため）
 	GetMesh()->SetVisibility(false);
@@ -90,6 +91,9 @@ void APlayerCharacter::ToggleCrouch()
 	else
 	{
 		Crouch();
+
+		// しゃがむときはキャラクターの回転モードをOrientに設定する
+		SetRotationMode(ERotationMode::Orient);
 	}
 }
 
