@@ -27,6 +27,9 @@ APlayerCharacter::APlayerCharacter()
 
 	GetCharacterMovement()->RotationRate = FRotator(0.f, 500.f, 0.f);
 
+	// キャラクターがしゃがむことができるように設定
+	GetCharacterMovement()->NavAgentProps.bCanCrouch = true;
+
 	// 親のメッシュを非表示にして、アニメーションは常に更新するように設定（親のアニメーションを子に引き継がせるため）
 	GetMesh()->SetVisibility(false);
 	GetMesh()->VisibilityBasedAnimTickOption = EVisibilityBasedAnimTickOption::AlwaysTickPoseAndRefreshBones;
@@ -77,6 +80,19 @@ void APlayerCharacter::Jump()
 	Super::Jump();
 }
 
+void APlayerCharacter::ToggleCrouch()
+{
+	// しゃがみ状態なら立ち上がる、立っている状態ならしゃがむ
+	if (bIsCrouched)
+	{
+		UnCrouch();
+	}
+	else
+	{
+		Crouch();
+	}
+}
+
 void APlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
@@ -101,6 +117,7 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 		EnhancedInputComponent->BindAction(MovementAction, ETriggerEvent::Triggered, this, &APlayerCharacter::Move);
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &APlayerCharacter::Look);
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &APlayerCharacter::Jump);
+		EnhancedInputComponent->BindAction(CrouchAction, ETriggerEvent ::Started, this, &APlayerCharacter::ToggleCrouch);
 	}
 }
 

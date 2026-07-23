@@ -29,6 +29,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	virtual void Jump() override;
+	void ToggleCrouch();
 
 	UFUNCTION(BlueprintCallable, Category = "Character")
 	void SetRotationMode(ERotationMode NewRotationMode);
@@ -44,6 +45,8 @@ protected:
 	UInputAction* LookAction;
 	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputAction* JumpAction;
+	UPROPERTY(EditAnywhere, Category = "Input")
+	UInputAction* CrouchAction;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Character")
 	TObjectPtr<USkeletalMeshComponent> VisualMesh;
