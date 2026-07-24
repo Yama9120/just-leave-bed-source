@@ -67,6 +67,9 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Movement", meta = (ClampMin = "0.0"))
 	float RotationInterpSpeed = 10.f;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Combat", meta = (ClampMin = "0.1"))
+	float DodgeDistanceScale = 2.f;
+
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
 	void Dodge();

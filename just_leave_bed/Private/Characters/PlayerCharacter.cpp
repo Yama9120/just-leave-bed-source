@@ -104,6 +104,9 @@ void APlayerCharacter::Dodge()
 	PreviousRotationMode = RotationMode;
 	SetRotationMode(ERotationMode::Orient);
 
+	// ドッジ中はルートモーションの移動量を倍にする
+	SetAnimRootMotionTranslationScale(DodgeDistanceScale);
+
 	const float MontageLength = PlayAnimMontage(DodgeMontage);
 	if (MontageLength <= 0.f)
 	{
@@ -172,6 +175,9 @@ void APlayerCharacter::FinishDodge()
 {
 	ActionState = EActionState::EAS_Unoccupied;
 	SetRotationMode(PreviousRotationMode);
+
+	// ドッジ中はルートモーションの移動量を2倍にしていたので、元に戻す
+	SetAnimRootMotionTranslationScale(1.f);
 }
 
 void APlayerCharacter::Jump()
