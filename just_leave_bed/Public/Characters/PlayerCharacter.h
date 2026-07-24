@@ -11,6 +11,7 @@ class UInputMappingContext;
 class UInputAction;
 class USpringArmComponent;
 class UCameraComponent;
+class UAnimMontage;
 
 UENUM(BlueprintType)
 enum class ERotationMode : uint8
@@ -47,6 +48,8 @@ protected:
 	UInputAction* JumpAction;
 	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputAction* CrouchAction;
+	UPROPERTY(EditAnywhere, Category = "Input")
+	UInputAction* DodgeAction;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Character")
 	TObjectPtr<USkeletalMeshComponent> VisualMesh;
@@ -65,10 +68,14 @@ protected:
 
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
+	void Dodge();
 
 private:
 	UPROPERTY(VisibleAnywhere)
 	USpringArmComponent* SpringArm;
 	UPROPERTY(VisibleAnywhere)
 	UCameraComponent* ViewCamera;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Combat")
+	UAnimMontage* DodgeMontage;
 };
