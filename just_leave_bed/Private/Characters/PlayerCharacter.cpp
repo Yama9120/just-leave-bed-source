@@ -129,7 +129,7 @@ void APlayerCharacter::Dodge()
 	// delegateにOnDodgeMontageEnded関数をバインド
 	EndDelegate.BindUObject(this, &APlayerCharacter::OnDodgeMontageEnded);
 	// ドッジアニメーションが終了したときにOnDodgeMontageEndedが呼ばれるように設定
-	AnimInstance->Montage_SetEndDelegate(EndDelegate, DodgeMontage);
+	AnimInstance->Montage_SetBlendingOutDelegate(EndDelegate, DodgeMontage);
 }
 
 bool APlayerCharacter::CanDodge() const
