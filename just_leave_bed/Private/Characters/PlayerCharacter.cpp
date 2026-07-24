@@ -60,8 +60,8 @@ void APlayerCharacter::BeginPlay()
 
 void APlayerCharacter::Move(const FInputActionValue& Value)
 {
-	// すでにアクション中の場合は移動できない
-	if (IsOccupied())
+	// すでにアクション中の場合、またはコントローラーが存在しない場合は移動処理を行わない
+	if (IsOccupied() || !Controller)
 	{
 		return;
 	}
@@ -99,13 +99,6 @@ void APlayerCharacter::Dodge()
 		const FRotator Target(0.f, LastInput.Rotation().Yaw, 0.f);
 		SetActorRotation(Target);
 	}
-	// ドッジ中はキャラクターの回転モードをOrientに設定する
-	// ※ TODO：現在の実装方法では、しゃがみ状態からドッジするときに、Strafeが消滅する。Strafeを使わない or ターゲット処理を実装
-	PreviousRotationMode = RotationMode;
-	SetRotationMode(ERotationMode::Orient);
-
-	// ドッジ中はルートモーションの移動量を倍にする
-	SetAnimRootMotionTranslationScale(DodgeDistanceScale);
 
 	const float MontageLength = PlayAnimMontage(DodgeMontage);
 	if (MontageLength <= 0.f)
@@ -114,6 +107,14 @@ void APlayerCharacter::Dodge()
 	}
 
 	ActionState = EActionState::EAS_Dodge;
+
+	// ドッジ中はキャラクターの回転モードをOrientに設定する
+	// ※ TODO：現在の実装方法では、しゃがみ状態からドッジするときに、Strafeが消滅する。Strafeを使わない or ターゲット処理を実装
+	PreviousRotationMode = RotationMode;
+	SetRotationMode(ERotationMode::Orient);
+
+	// ドッジ中はルートモーションの移動量にDodgeDistanceScaleを適用
+	SetAnimRootMotionTranslationScale(DodgeDistanceScale);
 
 	// しゃがんでいる場合は立ち上がる
 	if (bIsCrouched)
@@ -165,10 +166,8 @@ void APlayerCharacter::OnDodgeMontageEnded(UAnimMontage* Montage, bool bInterrup
 	{
 		return;
 	}
-	else
-	{
-		FinishDodge();
-	}
+
+	FinishDodge();
 }
 
 void APlayerCharacter::FinishDodge()
@@ -176,7 +175,7 @@ void APlayerCharacter::FinishDodge()
 	ActionState = EActionState::EAS_Unoccupied;
 	SetRotationMode(PreviousRotationMode);
 
-	// ドッジ中はルートモーションの移動量を2倍にしていたので、元に戻す
+	// ドッジ中のルートモーションの移動量（DodgeDistanceScale）を等倍に戻す
 	SetAnimRootMotionTranslationScale(1.f);
 }
 
