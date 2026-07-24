@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "CharacterTypes.h"
 #include "InputActionValue.h"
 #include "PlayerCharacter.generated.h"
 
@@ -70,6 +71,9 @@ protected:
 	void Look(const FInputActionValue& Value);
 	void Dodge();
 
+	void OnDodgeMontageEnded(UAnimMontage* Montage, bool bInterrupted);
+	void FinishDodge();
+
 private:
 	UPROPERTY(VisibleAnywhere)
 	USpringArmComponent* SpringArm;
@@ -78,4 +82,7 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	UAnimMontage* DodgeMontage;
+
+	UPROPERTY(BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	EActionState ActionState = EActionState::EAS_Unoccupied;
 };

@@ -6,6 +6,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
+#include "Animation/AnimInstance.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 APlayerCharacter::APlayerCharacter()
@@ -80,7 +81,45 @@ void APlayerCharacter::Look(const FInputActionValue& Value)
 
 void APlayerCharacter::Dodge()
 {
-	PlayAnimMontage(DodgeMontage);
+	// すでにアクション中の場合はドッジできない
+	if (ActionState != EActionState::EAS_Unoccupied)
+	{
+		return;
+	}
+
+	float MontageLength = PlayAnimMontage(DodgeMontage);
+	if (MontageLength <= 0.f)
+	{
+		return;
+	}
+
+	ActionState = EActionState::EAS_Dodge;
+
+	// ドッジアニメーションが終了したときに呼ばれるデリゲートを設定
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	FOnMontageEnded EndDelegate;
+
+	// delegateにOnDodgeMontageEnded関数をバインド
+	EndDelegate.BindUObject(this, &APlayerCharacter::OnDodgeMontageEnded);
+	// ドッジアニメーションが終了したときにOnDodgeMontageEndedが呼ばれるように設定
+	AnimInstance->Montage_SetEndDelegate(EndDelegate, DodgeMontage);
+}
+
+void APlayerCharacter::OnDodgeMontageEnded(UAnimMontage* Montage, bool bInterrupted)
+{
+	if (Montage != DodgeMontage)
+	{
+		return;
+	}
+	else
+	{
+		FinishDodge();
+	}
+}
+
+void APlayerCharacter::FinishDodge()
+{
+	ActionState = EActionState::EAS_Unoccupied;
 }
 
 void APlayerCharacter::Jump()
