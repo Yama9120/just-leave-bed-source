@@ -71,6 +71,8 @@ protected:
 	void Look(const FInputActionValue& Value);
 	void Dodge();
 
+	bool CanDodge() const;
+	bool IsOccupied() const;
 	void OnDodgeMontageEnded(UAnimMontage* Montage, bool bInterrupted);
 	void FinishDodge();
 

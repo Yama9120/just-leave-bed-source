@@ -60,6 +60,12 @@ void APlayerCharacter::BeginPlay()
 
 void APlayerCharacter::Move(const FInputActionValue& Value)
 {
+	// すでにアクション中の場合は移動できない
+	if (IsOccupied())
+	{
+		return;
+	}
+
 	const FVector2D MovementVector = Value.Get<FVector2D>();
 
 	const FRotator Rotation = Controller->GetControlRotation();
@@ -81,19 +87,24 @@ void APlayerCharacter::Look(const FInputActionValue& Value)
 
 void APlayerCharacter::Dodge()
 {
-	// すでにアクション中の場合はドッジできない
-	if (ActionState != EActionState::EAS_Unoccupied)
+	if (!CanDodge())
 	{
 		return;
 	}
 
-	float MontageLength = PlayAnimMontage(DodgeMontage);
+	const float MontageLength = PlayAnimMontage(DodgeMontage);
 	if (MontageLength <= 0.f)
 	{
 		return;
 	}
 
 	ActionState = EActionState::EAS_Dodge;
+
+	// しゃがんでいる場合は立ち上がる
+	if (bIsCrouched)
+	{
+		UnCrouch();
+	}
 
 	// ドッジアニメーションが終了したときに呼ばれるデリゲートを設定
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
@@ -103,6 +114,34 @@ void APlayerCharacter::Dodge()
 	EndDelegate.BindUObject(this, &APlayerCharacter::OnDodgeMontageEnded);
 	// ドッジアニメーションが終了したときにOnDodgeMontageEndedが呼ばれるように設定
 	AnimInstance->Montage_SetEndDelegate(EndDelegate, DodgeMontage);
+}
+
+bool APlayerCharacter::CanDodge() const
+{
+	// すでにアクション中の場合はドッジできない
+	if (IsOccupied())
+	{
+		return false;
+	}
+
+	// ドッジアニメーションが設定されていない場合はドッジできない
+	if (!DodgeMontage)
+	{
+		return false;
+	}
+
+	// 空中ではドッジできない
+	if (GetCharacterMovement()->IsFalling())
+	{
+		return false;
+	}
+
+	return true;
+}
+
+bool APlayerCharacter::IsOccupied() const
+{
+	return ActionState != EActionState::EAS_Unoccupied;
 }
 
 void APlayerCharacter::OnDodgeMontageEnded(UAnimMontage* Montage, bool bInterrupted)
@@ -124,6 +163,12 @@ void APlayerCharacter::FinishDodge()
 
 void APlayerCharacter::Jump()
 {
+	// すでにアクション中の場合はジャンプできない
+	if (IsOccupied())
+	{
+		return;
+	}
+
 	if (bIsCrouched)
 	{
 		UnCrouch();
