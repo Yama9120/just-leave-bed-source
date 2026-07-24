@@ -92,6 +92,18 @@ void APlayerCharacter::Dodge()
 		return;
 	}
 
+	// ドッジの方向にキャラクターを向ける
+	const FVector LastInput = GetCharacterMovement()->GetLastInputVector();
+	if (!LastInput.IsNearlyZero())
+	{
+		const FRotator Target(0.f, LastInput.Rotation().Yaw, 0.f);
+		SetActorRotation(Target);
+	}
+	// ドッジ中はキャラクターの回転モードをOrientに設定する
+	// ※ TODO：現在の実装方法では、しゃがみ状態からドッジするときに、Strafeが消滅する。Strafeを使わない or ターゲット処理を実装
+	PreviousRotationMode = RotationMode;
+	SetRotationMode(ERotationMode::Orient);
+
 	const float MontageLength = PlayAnimMontage(DodgeMontage);
 	if (MontageLength <= 0.f)
 	{
@@ -159,6 +171,7 @@ void APlayerCharacter::OnDodgeMontageEnded(UAnimMontage* Montage, bool bInterrup
 void APlayerCharacter::FinishDodge()
 {
 	ActionState = EActionState::EAS_Unoccupied;
+	SetRotationMode(PreviousRotationMode);
 }
 
 void APlayerCharacter::Jump()
