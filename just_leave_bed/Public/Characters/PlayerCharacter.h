@@ -79,11 +79,23 @@ protected:
 	void OnDodgeMontageEnded(UAnimMontage* Montage, bool bInterrupted);
 	void FinishDodge();
 
+	// しゃがみ時のカメラのZ座標オフセットを設定する関数
+	virtual void OnStartCrouch(float HeightAdjust, float ScaledHeightAdjust) override;
+	virtual void OnEndCrouch(float HeightAdjust, float ScaledHeightAdjust) override;
+
 private:
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, Category = "Camera")
 	USpringArmComponent* SpringArm;
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, Category = "Camera")
 	UCameraComponent* ViewCamera;
+
+	// しゃがみ時のカメラのZ座標オフセット
+	UPROPERTY(EditDefaultsOnly, Category = "Camera")
+	float CrouchCameraZOffset = 40.f;
+	UPROPERTY(VisibleInstanceOnly, Category = "Camera")
+	float TargetCameraZ = 0.f;
+	UPROPERTY(VisibleInstanceOnly, Category = "Camera")
+	float DefaultCameraZ = 0.f;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	UAnimMontage* DodgeMontage;
