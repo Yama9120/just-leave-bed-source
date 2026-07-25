@@ -94,8 +94,6 @@ private:
 	float CrouchCameraZOffset = 40.f;
 	UPROPERTY(VisibleInstanceOnly, Category = "Camera")
 	float TargetCameraZ = 0.f;
-	UPROPERTY(VisibleInstanceOnly, Category = "Camera")
-	float DefaultCameraZ = 0.f;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	UAnimMontage* DodgeMontage;

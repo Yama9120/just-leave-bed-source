@@ -26,10 +26,6 @@ APlayerCharacter::APlayerCharacter()
 	ViewCamera->SetupAttachment(SpringArm);
 	ViewCamera->bUsePawnControlRotation = false;
 
-	// カメラの初期位置を保存しておく
-	DefaultCameraZ = ViewCamera->GetRelativeLocation().Z;
-	TargetCameraZ = DefaultCameraZ;
-
 	GetCharacterMovement()->RotationRate = FRotator(0.f, 500.f, 0.f);
 
 	// キャラクターがしゃがむことができるように設定
@@ -188,11 +184,10 @@ void APlayerCharacter::OnStartCrouch(float HeightAdjust, float ScaledHeightAdjus
 	Super::OnStartCrouch(HeightAdjust, ScaledHeightAdjust);
 
 	// しゃがみ初めに急にカメラが下がるのを防ぐため、HeightAdjust分だけカメラのZ座標を上げる
-	FVector CurrentCameraLocation = ViewCamera->GetRelativeLocation();
-	ViewCamera->SetRelativeLocation(FVector(CurrentCameraLocation.X, CurrentCameraLocation.Y, CurrentCameraLocation.Z + HeightAdjust));
+	SpringArm->TargetOffset.Z += HeightAdjust;
 
 	// オフセット分だけカメラのZ座標を下げる
-	TargetCameraZ = DefaultCameraZ - CrouchCameraZOffset;
+	TargetCameraZ = -CrouchCameraZOffset;
 }
 
 void APlayerCharacter::OnEndCrouch(float HeightAdjust, float ScaledHeightAdjust)
@@ -200,11 +195,10 @@ void APlayerCharacter::OnEndCrouch(float HeightAdjust, float ScaledHeightAdjust)
 	Super::OnEndCrouch(HeightAdjust, ScaledHeightAdjust);
 
 	// しゃがみ終了時に急にカメラが上がるのを防ぐため、HeightAdjust分だけカメラのZ座標を下げる
-	FVector CurrentCameraLocation = ViewCamera->GetRelativeLocation();
-	ViewCamera->SetRelativeLocation(FVector(CurrentCameraLocation.X, CurrentCameraLocation.Y, CurrentCameraLocation.Z - HeightAdjust));
+	SpringArm->TargetOffset.Z = -HeightAdjust;
 
 	// カメラのZ座標を元に戻す
-	TargetCameraZ = DefaultCameraZ;
+	TargetCameraZ = 0.f;
 }
 
 void APlayerCharacter::Jump()
@@ -266,10 +260,10 @@ void APlayerCharacter::Tick(float DeltaTime)
 	}
 
 	// しゃがみ時のカメラのZ座標オフセットを滑らかに補間する
-	const FVector CurrentCameraLocation = ViewCamera->GetRelativeLocation();
+	const FVector CurrentCameraLocation = SpringArm->TargetOffset;
 	const FVector TargetCameraLocation = FVector(CurrentCameraLocation.X, CurrentCameraLocation.Y, TargetCameraZ);
 	const FVector SmoothedCameraLocation = FMath::VInterpTo(CurrentCameraLocation, TargetCameraLocation, DeltaTime, 3.f);
-	ViewCamera->SetRelativeLocation(SmoothedCameraLocation);
+	SpringArm->TargetOffset = SmoothedCameraLocation;
 }
 
 void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
