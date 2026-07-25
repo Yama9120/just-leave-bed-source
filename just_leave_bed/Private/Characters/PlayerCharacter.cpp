@@ -262,7 +262,7 @@ void APlayerCharacter::Tick(float DeltaTime)
 	// しゃがみ時のカメラのZ座標オフセットを滑らかに補間する
 	const FVector CurrentCameraLocation = SpringArm->TargetOffset;
 	const FVector TargetCameraLocation = FVector(CurrentCameraLocation.X, CurrentCameraLocation.Y, TargetCameraZ);
-	const FVector SmoothedCameraLocation = FMath::VInterpTo(CurrentCameraLocation, TargetCameraLocation, DeltaTime, 3.f);
+	const FVector SmoothedCameraLocation = FMath::VInterpTo(CurrentCameraLocation, TargetCameraLocation, DeltaTime, CameraInterpSpeed);
 	SpringArm->TargetOffset = SmoothedCameraLocation;
 }
 
