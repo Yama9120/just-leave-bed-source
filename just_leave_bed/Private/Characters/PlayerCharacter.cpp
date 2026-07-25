@@ -195,7 +195,7 @@ void APlayerCharacter::OnEndCrouch(float HeightAdjust, float ScaledHeightAdjust)
 	Super::OnEndCrouch(HeightAdjust, ScaledHeightAdjust);
 
 	// しゃがみ終了時に急にカメラが上がるのを防ぐため、HeightAdjust分だけカメラのZ座標を下げる
-	SpringArm->TargetOffset.Z = -HeightAdjust;
+	SpringArm->TargetOffset.Z -= HeightAdjust;
 
 	// カメラのZ座標を元に戻す
 	TargetCameraZ = 0.f;
