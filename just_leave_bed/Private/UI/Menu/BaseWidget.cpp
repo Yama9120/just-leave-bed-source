@@ -2,6 +2,7 @@
 
 #include "UI/Menu/BaseWidget.h"
 #include "Components/Button.h"
+#include "UI/Menu/MenuButton.h"
 #include "Controllers/MyPlayerController.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetSystemLibrary.h"
@@ -26,7 +27,7 @@ void UBaseWidget::NativeConstruct()
 	SetInitialFocus();
 }
 
-void UBaseWidget::OnButtonPlayClicked()
+void UBaseWidget::OnButtonPlayClicked(UMenuButton* Button)
 {
 	AMyPlayerController* PlayerController = Cast<AMyPlayerController>(GetOwningPlayer());
 	if (PlayerController)
@@ -35,7 +36,7 @@ void UBaseWidget::OnButtonPlayClicked()
 	}
 }
 
-void UBaseWidget::OnButtonQuitClicked()
+void UBaseWidget::OnButtonQuitClicked(UMenuButton* Button)
 {
 	// PlayerControllerを取得してゲームを終了する
 	if (APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0))
@@ -44,7 +45,7 @@ void UBaseWidget::OnButtonQuitClicked()
 	}
 }
 
-void UBaseWidget::OnButtonReStartClicked()
+void UBaseWidget::OnButtonReStartClicked(UMenuButton* Button)
 {
 	// ゲームのポーズを解除する（止めていたゲームの再開）
 	UGameplayStatics::SetGamePaused(GetWorld(), false);

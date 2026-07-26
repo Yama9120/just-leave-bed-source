@@ -7,7 +7,7 @@
 #include "UI/Menu/MenuTypes.h"
 #include "BaseWidget.generated.h"
 
-class UButton;
+class UMenuButton;
 
 /**
  *
@@ -31,18 +31,18 @@ protected:
 	virtual void NativeConstruct() override;
 
 	UPROPERTY(meta = (BindWidgetOptional))
-	TObjectPtr<UButton> ButtonPlay;
+	TObjectPtr<UMenuButton> ButtonPlay;
 	UPROPERTY(meta = (BindWidgetOptional))
-	TObjectPtr<UButton> ButtonQuit;
+	TObjectPtr<UMenuButton> ButtonQuit;
 	UPROPERTY(meta = (BindWidgetOptional))
-	TObjectPtr<UButton> ButtonReStart;
+	TObjectPtr<UMenuButton> ButtonReStart;
 
 	UFUNCTION()
-	virtual void OnButtonPlayClicked();
+	virtual void OnButtonPlayClicked(UMenuButton* Button);
 	UFUNCTION()
-	virtual void OnButtonQuitClicked();
+	virtual void OnButtonQuitClicked(UMenuButton* Button);
 	UFUNCTION()
-	virtual void OnButtonReStartClicked();
+	virtual void OnButtonReStartClicked(UMenuButton* Button);
 
 	UFUNCTION()
 	virtual void SetInitialFocus();
