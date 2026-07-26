@@ -13,4 +13,7 @@ UCLASS()
 class JUST_LEAVE_BED_API UResultWidget : public UBaseWidget
 {
 	GENERATED_BODY()
+
+protected:
+	virtual void SetInitialFocus() override;
 };
