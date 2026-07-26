@@ -43,4 +43,7 @@ protected:
 	virtual void OnButtonQuitClicked();
 	UFUNCTION()
 	virtual void OnButtonReStartClicked();
+
+	UFUNCTION()
+	virtual void SetInitialFocus();
 };

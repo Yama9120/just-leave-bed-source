@@ -22,6 +22,8 @@ void UBaseWidget::NativeConstruct()
 	{
 		ButtonReStart->OnClicked.AddUniqueDynamic(this, &UBaseWidget::OnButtonReStartClicked);
 	}
+
+	SetInitialFocus();
 }
 
 void UBaseWidget::OnButtonPlayClicked()
@@ -52,4 +54,12 @@ void UBaseWidget::OnButtonReStartClicked()
 
 	// 現在のレベルを再読み込みする
 	UGameplayStatics::OpenLevel(GetWorld(), FName(*CurrentLevelName));
+}
+
+void UBaseWidget::SetInitialFocus()
+{
+	if (ButtonPlay)
+	{
+		ButtonPlay->SetKeyboardFocus();
+	}
 }
