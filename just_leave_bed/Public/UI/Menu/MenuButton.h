@@ -15,6 +15,7 @@ class JUST_LEAVE_BED_API UMenuButton : public UUserWidget
 	GENERATED_BODY()
 
 public:
+	void FocusInnerButton();
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMenuButtonClicked, UMenuButton*, Button);
 	FOnMenuButtonClicked OnClicked;
 

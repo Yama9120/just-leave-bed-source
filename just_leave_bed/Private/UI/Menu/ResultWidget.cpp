@@ -7,6 +7,6 @@ void UResultWidget::SetInitialFocus()
 {
 	if (ButtonReStart)
 	{
-		ButtonReStart->SetKeyboardFocus();
+		ButtonReStart->FocusInnerButton();
 	}
 }

@@ -3,6 +3,14 @@
 #include "UI/Menu/MenuButton.h"
 #include "Components/Button.h"
 
+void UMenuButton::FocusInnerButton()
+{
+	if (InnerButton)
+	{
+		InnerButton->SetKeyboardFocus();
+	}
+}
+
 void UMenuButton::NativeConstruct()
 {
 	Super::NativeConstruct();

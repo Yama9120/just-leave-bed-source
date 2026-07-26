@@ -61,6 +61,6 @@ void UBaseWidget::SetInitialFocus()
 {
 	if (ButtonPlay)
 	{
-		ButtonPlay->SetKeyboardFocus();
+		ButtonPlay->FocusInnerButton();
 	}
 }
