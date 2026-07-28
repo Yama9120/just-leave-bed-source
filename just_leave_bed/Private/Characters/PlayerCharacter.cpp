@@ -219,8 +219,8 @@ void APlayerCharacter::Jump()
 
 void APlayerCharacter::ToggleCrouch()
 {
-	// 空中ではしゃがめない
-	if (GetCharacterMovement()->IsFalling())
+	// 空中ではしゃがめない or すでにアクション中の場合はしゃがめない
+	if (GetCharacterMovement()->IsFalling() || IsOccupied())
 	{
 		return;
 	}
