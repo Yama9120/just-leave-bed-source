@@ -31,7 +31,7 @@ UUserWidget* AMyPlayerController::OpenMenuWidget(TSubclassOf<UBaseWidget> Widget
 	ActiveMenuWidget = Widget;
 
 	// 入力モード、ポーズ設定を反映する
-	ApplyMenuInputMode(Widget->DesiredInputMode, Widget->bPauseGameWhileOpen);
+	ApplyMenuInputMode(Widget->InputProfile, Widget->bPauseGameWhileOpen);
 
 	return Widget;
 }
@@ -49,44 +49,33 @@ void AMyPlayerController::CloseMenuWidget()
 	ActiveMenuWidget = nullptr;
 
 	// 入力モードをGameにし、ポーズを解除する
-	ApplyMenuInputMode(EMenuInputMode::GameOnly, false);
+	ApplyMenuInputMode(FInputProfile(), false);
 }
 
-void AMyPlayerController::ApplyMenuInputMode(EMenuInputMode InputMode, bool bPause)
+void AMyPlayerController::ApplyMenuInputMode(const FInputProfile& Profile, bool bPause)
 {
-	switch (InputMode)
+	switch (Profile.InputMode)
 	{
-		// GameOnly：マウスカーソルを非表示にし、移動と視点操作の入力を有効にする
-		case EMenuInputMode::GameOnly:
+		case EMenuInputMode::EMIM_GameOnly:
 		{
-			FInputModeGameOnly Mode;
-			SetInputMode(Mode);
-			bShowMouseCursor = false;
-			SetIgnoreMoveInput(false);
-			SetIgnoreLookInput(false);
+			SetInputMode(FInputModeGameOnly());
 			break;
 		}
-		// UIOnly：マウスカーソルを表示し、移動と視点操作の入力を無効にする
-		case EMenuInputMode::UIOnly:
+		case EMenuInputMode::EMIM_UIOnly:
 		{
-			FInputModeUIOnly Mode;
-			SetInputMode(Mode);
-			bShowMouseCursor = true;
-			SetIgnoreMoveInput(true);
-			SetIgnoreLookInput(true);
+			SetInputMode(FInputModeUIOnly());
 			break;
 		}
-		// GameAndUI：マウスカーソルを表示し、移動と視点操作の入力を有効にする
-		case EMenuInputMode::GameAndUI:
+		case EMenuInputMode::EMIM_GameAndUI:
 		{
-			FInputModeGameAndUI Mode;
-			SetInputMode(Mode);
-			bShowMouseCursor = true;
-			SetIgnoreMoveInput(false);
-			SetIgnoreLookInput(false);
+			SetInputMode(FInputModeGameAndUI());
 			break;
 		}
 	}
+
+	bShowMouseCursor = Profile.bShowCursor;
+	SetIgnoreMoveInput(Profile.bIgnoreMoveInput);
+	SetIgnoreLookInput(Profile.bIgnoreLookInput);
 
 	// ゲームのポーズ状態を設定する
 	UGameplayStatics::SetGamePaused(GetWorld(), bPause);

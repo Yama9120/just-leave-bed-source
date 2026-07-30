@@ -22,7 +22,7 @@ class JUST_LEAVE_BED_API AMyPlayerController : public APlayerController
 public:
 	UUserWidget* OpenMenuWidget(TSubclassOf<UBaseWidget> WidgetClass);
 	void CloseMenuWidget();
-	void ApplyMenuInputMode(EMenuInputMode InputMode, bool bPause);
+	void ApplyMenuInputMode(const FInputProfile& Profile, bool bPause);
 
 protected:
 	virtual void SetupInputComponent() override;

@@ -19,10 +19,9 @@ class JUST_LEAVE_BED_API UBaseWidget : public UUserWidget
 
 public:
 	// このウィジェットが開かれたとき、どの入力モードに切り替えるかを指定
-	// UIOnly: マウス操作のみの画面用（スタート・リザルト）
-	// GameAndUI: ゲーム側の入力も受け付ける画面用（ポーズ：ポーズキーで画面を閉じられるようにする）
+	// 入力モード・移動/視点操作の有効化・マウスカーソルの表示などをWBP側で設定するのではなく、C++側で設定
 	UPROPERTY(EditDefaultsOnly, Category = "Menu")
-	EMenuInputMode DesiredInputMode = EMenuInputMode::UIOnly;
+	FInputProfile InputProfile;
 	// このウィジェットが開かれたとき、ゲームを止めるかどうかを指定
 	UPROPERTY(EditDefaultsOnly, Category = "Menu")
 	bool bPauseGameWhileOpen = false;
