@@ -17,6 +17,32 @@ void APlayerGameMode::BeginPlay()
 			PlayerController->OpenMenuWidget(StartWidgetClass);
 		}
 	}
+
+	// Debug用
+	SetPhase(EGamePhase::EGP_2DGame);
+}
+
+void APlayerGameMode::SetPhase(EGamePhase NewPhase)
+{
+	if (CurrentPhase == NewPhase)
+	{
+		return;
+	}
+
+	CurrentPhase = NewPhase;
+
+	// Debug用
+	UE_LOG(LogTemp, Log, TEXT("%s"), *UEnum::GetValueAsString(CurrentPhase));
+}
+
+EGamePhase APlayerGameMode::GetCurrentPhase() const
+{
+	return CurrentPhase;
+}
+
+bool APlayerGameMode::CanPause() const
+{
+	return CurrentPhase != EGamePhase::EGP_Result;
 }
 
 void APlayerGameMode::ShowResultWidget()

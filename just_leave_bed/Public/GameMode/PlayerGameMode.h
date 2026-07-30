@@ -3,12 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GamePhase.h"
 #include "GameFramework/GameModeBase.h"
 #include "PlayerGameMode.generated.h"
 
 class UStartWidget;
 class UResultWidget;
-class UBaseWidget;
 
 /**
  *
@@ -21,6 +21,10 @@ class JUST_LEAVE_BED_API APlayerGameMode : public AGameModeBase
 public:
 	void ShowResultWidget();
 
+	void SetPhase(EGamePhase NewPhase);
+	EGamePhase GetCurrentPhase() const;
+	bool CanPause() const;
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -29,4 +33,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "UI")
 	TSubclassOf<UResultWidget> ResultWidgetClass;
+
+private:
+	EGamePhase CurrentPhase = EGamePhase::EGP_Title;
 };
