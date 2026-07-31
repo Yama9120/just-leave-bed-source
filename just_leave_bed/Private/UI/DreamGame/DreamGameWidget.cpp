@@ -9,17 +9,18 @@ void UDreamGameWidget::NativeConstruct()
 	if (Completed)
 	{
 		Completed->OnClicked.AddUniqueDynamic(this, &UDreamGameWidget::OnButtonCompleted);
+		Completed->FocusInnerButton();
 	}
 }
 
 void UDreamGameWidget::OnButtonCompleted(UMenuButton* Button)
 {
-	// クリアボタンが押されたときの処理をここに記述
+	// クリアボタンが押されたあとに、ゲームのクリアを通知する
 	NotifyCompleted();
 }
 
 void UDreamGameWidget::NotifyCompleted()
 {
-	// GameModeがOnDreamGameCompletedイベントを受け取るようにする
+	// 2Dゲームフェーズの終了を通知する。個々のミニゲームのクリアでは呼ばない
 	OnDreamGameCompleted.Broadcast();
 }

@@ -10,6 +10,7 @@
 
 class UStartWidget;
 class UResultWidget;
+class UDreamGameWidget;
 
 /**
  *
@@ -26,6 +27,7 @@ public:
 	EGamePhase GetCurrentPhase() const;
 	FInputProfile GetInputProfileForPhase(EGamePhase Phase) const;
 	bool CanPause() const;
+	void EnterDreamGame();
 
 protected:
 	virtual void BeginPlay() override;
@@ -34,11 +36,19 @@ protected:
 	TMap<EGamePhase, FInputProfile> PhaseInputProfiles;
 
 	UPROPERTY(EditAnywhere, Category = "UI")
+	TSubclassOf<UDreamGameWidget> DreamGameWidgetClass;
+
+	UPROPERTY(EditAnywhere, Category = "UI")
 	TSubclassOf<UStartWidget> StartWidgetClass;
 
 	UPROPERTY(EditAnywhere, Category = "UI")
 	TSubclassOf<UResultWidget> ResultWidgetClass;
 
 private:
+	void HandleDreamGameCompleted();
+
+	UPROPERTY()
+	TObjectPtr<UDreamGameWidget> ActiveDreamGameWidget;
+
 	EGamePhase CurrentPhase = EGamePhase::EGP_Title;
 };

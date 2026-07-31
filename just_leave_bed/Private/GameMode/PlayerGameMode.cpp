@@ -3,6 +3,8 @@
 #include "GameMode/PlayerGameMode.h"
 #include "UI/Menu/StartWidget.h"
 #include "UI/Menu/ResultWidget.h"
+#include "UI/DreamGame/DreamGameWidget.h"
+#include "Blueprint/UserWidget.h"
 #include "Controllers/MyPlayerController.h"
 
 void APlayerGameMode::BeginPlay()
@@ -60,6 +62,58 @@ EGamePhase APlayerGameMode::GetCurrentPhase() const
 bool APlayerGameMode::CanPause() const
 {
 	return CurrentPhase != EGamePhase::EGP_Result;
+}
+
+void APlayerGameMode::EnterDreamGame()
+{
+	// 遷移元のフェーズを確認する（※現在は仮にタイトルからの遷移を想定）
+	if (CurrentPhase != EGamePhase::EGP_Title)
+	{
+		return;
+	}
+
+	if (!DreamGameWidgetClass)
+	{
+		return;
+	}
+
+	AMyPlayerController* PlayerController = Cast<AMyPlayerController>(GetWorld()->GetFirstPlayerController());
+	if (!PlayerController)
+	{
+		return;
+	}
+
+	// 2Dゲームフェーズに遷移する
+	SetPhase(EGamePhase::EGP_2DGame);
+
+	UDreamGameWidget* Widget = CreateWidget<UDreamGameWidget>(PlayerController, DreamGameWidgetClass);
+	if (!Widget)
+	{
+		return;
+	}
+
+	// クリアイベントをバインドする
+	Widget->OnDreamGameCompleted.AddUObject(this, &APlayerGameMode::HandleDreamGameCompleted);
+
+	// ウィジェットをビューポートに追加する
+	Widget->AddToViewport();
+	ActiveDreamGameWidget = Widget;
+}
+
+void APlayerGameMode::HandleDreamGameCompleted()
+{
+	if (ActiveDreamGameWidget)
+	{
+		// クリアイベントのバインドを解除する
+		ActiveDreamGameWidget->OnDreamGameCompleted.RemoveAll(this);
+
+		// ウィジェットをビューポートから削除する
+		ActiveDreamGameWidget->RemoveFromParent();
+		ActiveDreamGameWidget = nullptr;
+	}
+
+	// 2Dゲームクリア後、フェーズを切り替える（※現在は仮に3Dゲームフェーズに戻す）
+	SetPhase(EGamePhase::EGP_3DGame);
 }
 
 void APlayerGameMode::ShowResultWidget()
