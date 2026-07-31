@@ -13,4 +13,7 @@ UCLASS()
 class JUST_LEAVE_BED_API UStartWidget : public UBaseWidget
 {
 	GENERATED_BODY()
+
+protected:
+	virtual void OnButtonPlayClicked(UMenuButton* Button) override;
 };
