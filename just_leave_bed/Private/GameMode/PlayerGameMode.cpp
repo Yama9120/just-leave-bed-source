@@ -17,9 +17,19 @@ void APlayerGameMode::BeginPlay()
 			PlayerController->OpenMenuWidget(StartWidgetClass);
 		}
 	}
+}
 
-	// Debug用
-	SetPhase(EGamePhase::EGP_2DGame);
+FInputProfile APlayerGameMode::GetInputProfileForPhase(EGamePhase Phase) const
+{
+	// Phaseに対応する入力プロファイルを取得する
+	if (const FInputProfile* Found = PhaseInputProfiles.Find(Phase)) // Find関数は、指定されたキーに対応する値へのポインタを返す
+	{
+		return *Found;
+	}
+
+	// もし見つからなかった場合はデフォルトの入力プロファイルを返す
+	UE_LOG(LogTemp, Warning, TEXT("Input profile for phase %s not found."), *UEnum::GetValueAsString(Phase));
+	return FInputProfile();
 }
 
 void APlayerGameMode::SetPhase(EGamePhase NewPhase)
@@ -33,6 +43,13 @@ void APlayerGameMode::SetPhase(EGamePhase NewPhase)
 
 	// Debug用
 	UE_LOG(LogTemp, Log, TEXT("%s"), *UEnum::GetValueAsString(CurrentPhase));
+
+	// 変更後のフェーズに応じた入力プロファイルを適用する
+	AMyPlayerController* PlayerController = Cast<AMyPlayerController>(GetWorld()->GetFirstPlayerController());
+	if (PlayerController)
+	{
+		PlayerController->RefreshInputProfile();
+	}
 }
 
 EGamePhase APlayerGameMode::GetCurrentPhase() const

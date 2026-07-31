@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Controllers/MyPlayerController.h"
+#include "GameMode/PlayerGameMode.h"
 #include "UI/Menu/BaseWidget.h"
 #include "UI/Menu/PauseWidget.h"
 #include "Blueprint/UserWidget.h"
@@ -48,8 +49,8 @@ void AMyPlayerController::CloseMenuWidget()
 	ActiveMenuWidget->RemoveFromParent();
 	ActiveMenuWidget = nullptr;
 
-	// 入力モードをGameにし、ポーズを解除する
-	ApplyMenuInputMode(FInputProfile(), false);
+	// ゲームの現在のフェーズに応じた入力プロファイルを再適用する
+	RefreshInputProfile();
 }
 
 void AMyPlayerController::ApplyMenuInputMode(const FInputProfile& Profile, bool bPause)
@@ -74,6 +75,8 @@ void AMyPlayerController::ApplyMenuInputMode(const FInputProfile& Profile, bool 
 	}
 
 	bShowMouseCursor = Profile.bShowCursor;
+	ResetIgnoreMoveInput();
+	ResetIgnoreLookInput();
 	SetIgnoreMoveInput(Profile.bIgnoreMoveInput);
 	SetIgnoreLookInput(Profile.bIgnoreLookInput);
 
@@ -88,6 +91,25 @@ void AMyPlayerController::SetupInputComponent()
 	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(InputComponent))
 	{
 		EnhancedInputComponent->BindAction(PauseAction, ETriggerEvent::Started, this, &AMyPlayerController::PauseGame);
+	}
+}
+
+void AMyPlayerController::RefreshInputProfile()
+{
+	// ウィジェットが開いている場合はその入力プロファイルを適用する
+	if (ActiveMenuWidget)
+	{
+		ApplyMenuInputMode(ActiveMenuWidget->InputProfile, ActiveMenuWidget->bPauseGameWhileOpen);
+	}
+	// 開いていない場合はゲームモードの現在のフェーズに応じた入力プロファイルを適用する
+	else
+	{
+		if (const APlayerGameMode* GameMode = GetWorld()->GetAuthGameMode<APlayerGameMode>())
+		{
+			const EGamePhase CurrentPhase = GameMode->GetCurrentPhase();
+			const FInputProfile InputProfile = GameMode->GetInputProfileForPhase(CurrentPhase);
+			ApplyMenuInputMode(InputProfile, false);
+		}
 	}
 }
 

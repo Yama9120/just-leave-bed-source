@@ -23,6 +23,7 @@ public:
 	UUserWidget* OpenMenuWidget(TSubclassOf<UBaseWidget> WidgetClass);
 	void CloseMenuWidget();
 	void ApplyMenuInputMode(const FInputProfile& Profile, bool bPause);
+	void RefreshInputProfile();
 
 protected:
 	virtual void SetupInputComponent() override;
@@ -37,5 +38,5 @@ private:
 	TSubclassOf<UPauseWidget> PauseWidgetClass;
 
 	UPROPERTY()
-	UUserWidget* ActiveMenuWidget;
+	TObjectPtr<UBaseWidget> ActiveMenuWidget;
 };

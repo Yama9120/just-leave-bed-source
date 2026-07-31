@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GamePhase.h"
+#include "UI/Menu/MenuTypes.h"
 #include "GameFramework/GameModeBase.h"
 #include "PlayerGameMode.generated.h"
 
@@ -23,10 +24,14 @@ public:
 
 	void SetPhase(EGamePhase NewPhase);
 	EGamePhase GetCurrentPhase() const;
+	FInputProfile GetInputProfileForPhase(EGamePhase Phase) const;
 	bool CanPause() const;
 
 protected:
 	virtual void BeginPlay() override;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Phase")
+	TMap<EGamePhase, FInputProfile> PhaseInputProfiles;
 
 	UPROPERTY(EditAnywhere, Category = "UI")
 	TSubclassOf<UStartWidget> StartWidgetClass;
