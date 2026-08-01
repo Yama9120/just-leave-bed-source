@@ -6,6 +6,8 @@
 #include "UI/DreamGame/DreamGameWidget.h"
 #include "Blueprint/UserWidget.h"
 #include "Controllers/MyPlayerController.h"
+#include "Characters/PlayerCharacter.h"
+#include "EnhancedInputSubsystems.h"
 
 void APlayerGameMode::BeginPlay()
 {
@@ -83,6 +85,16 @@ void APlayerGameMode::EnterDreamGame()
 		return;
 	}
 
+	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+	{
+		// 3Dキャラ操作を外し、2Dゲーム用マッピングに入れ替える
+		if (const APlayerCharacter* Character = Cast<APlayerCharacter>(PlayerController->GetPawn()))
+		{
+			Subsystem->RemoveMappingContext(Character->GetPlayer3DContext());
+		}
+		Subsystem->AddMappingContext(Player2DContext, 0);
+	}
+
 	// 2Dゲームフェーズに遷移する
 	SetPhase(EGamePhase::EGP_2DGame);
 
@@ -110,6 +122,24 @@ void APlayerGameMode::HandleDreamGameCompleted()
 		// ウィジェットをビューポートから削除する
 		ActiveDreamGameWidget->RemoveFromParent();
 		ActiveDreamGameWidget = nullptr;
+	}
+
+	AMyPlayerController* PlayerController = Cast<AMyPlayerController>(GetWorld()->GetFirstPlayerController());
+	if (PlayerController)
+	{
+		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+		{
+			// 2Dゲーム用マッピングを外し、3Dキャラ操作用マッピングに戻す
+			Subsystem->RemoveMappingContext(Player2DContext);
+
+			// 決定を押した後、次のフェーズで同じキーの入力をすぐには受け付けないように設定
+			FModifyContextOptions Options = {};
+			Options.bIgnoreAllPressedKeysUntilRelease = true; // 切替後ジャンプ等の暴発を防ぐため、すべての押下中のキーが離されるまで無視する
+			if (const APlayerCharacter* Character = Cast<APlayerCharacter>(PlayerController->GetPawn()))
+			{
+				Subsystem->AddMappingContext(Character->GetPlayer3DContext(), 0, Options);
+			}
+		}
 	}
 
 	// 2Dゲームクリア後、フェーズを切り替える（※現在は仮に3Dゲームフェーズに戻す）

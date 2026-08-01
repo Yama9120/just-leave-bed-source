@@ -11,6 +11,7 @@
 class UStartWidget;
 class UResultWidget;
 class UDreamGameWidget;
+class UInputMappingContext;
 
 /**
  *
@@ -35,6 +36,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Phase")
 	TMap<EGamePhase, FInputProfile> PhaseInputProfiles;
+
+	UPROPERTY(EditAnywhere, Category = "Phase")
+	UInputMappingContext* Player2DContext;
 
 	UPROPERTY(EditAnywhere, Category = "UI")
 	TSubclassOf<UDreamGameWidget> DreamGameWidgetClass;
