@@ -53,7 +53,8 @@ void APlayerCharacter::BeginPlay()
 	{
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 		{
-			Subsystem->AddMappingContext(PlayerContext, 0);
+			Subsystem->AddMappingContext(Player3DContext, 0);
+			Subsystem->AddMappingContext(SystemContext, 0);
 		}
 	}
 }

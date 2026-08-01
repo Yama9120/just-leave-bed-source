@@ -40,7 +40,9 @@ protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY(EditAnywhere, Category = "Input")
-	UInputMappingContext* PlayerContext;
+	UInputMappingContext* Player3DContext;
+	UPROPERTY(EditAnywhere, Category = "Input")
+	UInputMappingContext* SystemContext;
 	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputAction* MovementAction;
 	UPROPERTY(EditAnywhere, Category = "Input")
