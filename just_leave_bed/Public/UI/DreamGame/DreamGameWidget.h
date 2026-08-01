@@ -22,6 +22,8 @@ class JUST_LEAVE_BED_API UDreamGameWidget : public UUserWidget
 public:
 	virtual void NativeConstruct() override;
 
+	void FocusCompletedButton();
+
 	UFUNCTION()
 	virtual void OnButtonCompleted(UMenuButton* Button);
 

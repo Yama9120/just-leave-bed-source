@@ -129,3 +129,19 @@ void APlayerGameMode::ShowResultWidget()
 		}
 	}
 }
+
+void APlayerGameMode::SetPhaseWidgetInteraction(bool bEnabled)
+{
+	if (ActiveDreamGameWidget)
+	{
+		// ウィジェットの表示状態を切り替える
+		ActiveDreamGameWidget->SetVisibility(
+			bEnabled ? ESlateVisibility::Visible : ESlateVisibility::HitTestInvisible);
+
+		// 復帰後、クリアボタンにフォーカスを当てる
+		if (bEnabled)
+		{
+			ActiveDreamGameWidget->FocusCompletedButton();
+		}
+	}
+}

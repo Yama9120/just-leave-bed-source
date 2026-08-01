@@ -31,6 +31,12 @@ UUserWidget* AMyPlayerController::OpenMenuWidget(TSubclassOf<UBaseWidget> Widget
 	Widget->AddToViewport();
 	ActiveMenuWidget = Widget;
 
+	// 裏のフェーズを隔離する（入力を受け付けないようにする）
+	if (APlayerGameMode* GameMode = GetWorld()->GetAuthGameMode<APlayerGameMode>())
+	{
+		GameMode->SetPhaseWidgetInteraction(false); // メニューが開いた→裏を隔離
+	}
+
 	// 入力モード、ポーズ設定を反映する
 	ApplyMenuInputMode(Widget->InputProfile, Widget->bPauseGameWhileOpen);
 
@@ -51,6 +57,12 @@ void AMyPlayerController::CloseMenuWidget()
 
 	// ゲームの現在のフェーズに応じた入力プロファイルを再適用する
 	RefreshInputProfile();
+
+	// 裏のフェーズを復帰する（入力を受け付けるようにする）
+	if (APlayerGameMode* GameMode = GetWorld()->GetAuthGameMode<APlayerGameMode>())
+	{
+		GameMode->SetPhaseWidgetInteraction(true); // メニューが閉じた→裏を復帰
+	}
 }
 
 void AMyPlayerController::ApplyMenuInputMode(const FInputProfile& Profile, bool bPause)

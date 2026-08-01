@@ -13,6 +13,15 @@ void UDreamGameWidget::NativeConstruct()
 	}
 }
 
+// 初回のみフォーカスが呼ばれる状態だったので、再度フォーカスを呼ぶ関数を作成
+void UDreamGameWidget::FocusCompletedButton()
+{
+	if (Completed)
+	{
+		Completed->FocusInnerButton();
+	}
+}
+
 void UDreamGameWidget::OnButtonCompleted(UMenuButton* Button)
 {
 	// クリアボタンが押されたあとに、ゲームのクリアを通知する
