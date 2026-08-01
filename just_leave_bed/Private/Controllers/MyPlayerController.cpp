@@ -115,10 +115,23 @@ void AMyPlayerController::RefreshInputProfile()
 
 void AMyPlayerController::PauseGame()
 {
-	// ゲームがすでにポーズされている場合はポーズ画面を閉じる
-	if (UGameplayStatics::IsGamePaused(GetWorld()))
+	// すでにPauseWidgetが開いている場合は閉じる
+	if (ActiveMenuWidget && ActiveMenuWidget->IsA(PauseWidgetClass))
 	{
 		CloseMenuWidget();
+		return;
+	}
+
+	// すでに他のメニューが開いている場合は何もしない
+	if (ActiveMenuWidget)
+	{
+		return;
+	}
+
+	// ゲームモードがポーズ可能かどうかを確認する
+	const APlayerGameMode* GameMode = GetWorld()->GetAuthGameMode<APlayerGameMode>();
+	if (GameMode && !GameMode->CanPause())
+	{
 		return;
 	}
 

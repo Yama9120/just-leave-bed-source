@@ -118,6 +118,8 @@ void APlayerGameMode::HandleDreamGameCompleted()
 
 void APlayerGameMode::ShowResultWidget()
 {
+	SetPhase(EGamePhase::EGP_Result);
+
 	if (ResultWidgetClass)
 	{
 		AMyPlayerController* PlayerController = Cast<AMyPlayerController>(GetWorld()->GetFirstPlayerController());
