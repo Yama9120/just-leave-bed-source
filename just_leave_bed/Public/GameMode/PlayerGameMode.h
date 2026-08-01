@@ -12,6 +12,8 @@ class UStartWidget;
 class UResultWidget;
 class UDreamGameWidget;
 class UInputMappingContext;
+class AMyPlayerController;
+class UEnhancedInputLocalPlayerSubsystem;
 
 /**
  *
@@ -51,6 +53,8 @@ protected:
 
 private:
 	void HandleDreamGameCompleted();
+	AMyPlayerController* GetMyPlayerController() const;
+	UEnhancedInputLocalPlayerSubsystem* GetEnhancedInputSubsystem() const;
 
 	UPROPERTY()
 	TObjectPtr<UDreamGameWidget> ActiveDreamGameWidget;

@@ -15,7 +15,7 @@ void APlayerGameMode::BeginPlay()
 
 	if (StartWidgetClass)
 	{
-		AMyPlayerController* PlayerController = Cast<AMyPlayerController>(GetWorld()->GetFirstPlayerController());
+		AMyPlayerController* PlayerController = GetMyPlayerController();
 		if (PlayerController)
 		{
 			PlayerController->OpenMenuWidget(StartWidgetClass);
@@ -49,7 +49,7 @@ void APlayerGameMode::SetPhase(EGamePhase NewPhase)
 	UE_LOG(LogTemp, Log, TEXT("%s"), *UEnum::GetValueAsString(CurrentPhase));
 
 	// 変更後のフェーズに応じた入力プロファイルを適用する
-	AMyPlayerController* PlayerController = Cast<AMyPlayerController>(GetWorld()->GetFirstPlayerController());
+	AMyPlayerController* PlayerController = GetMyPlayerController();
 	if (PlayerController)
 	{
 		PlayerController->RefreshInputProfile();
@@ -79,13 +79,13 @@ void APlayerGameMode::EnterDreamGame()
 		return;
 	}
 
-	AMyPlayerController* PlayerController = Cast<AMyPlayerController>(GetWorld()->GetFirstPlayerController());
+	AMyPlayerController* PlayerController = GetMyPlayerController();
 	if (!PlayerController)
 	{
 		return;
 	}
 
-	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = GetEnhancedInputSubsystem())
 	{
 		// 3Dキャラ操作を外し、2Dゲーム用マッピングに入れ替える
 		if (const APlayerCharacter* Character = Cast<APlayerCharacter>(PlayerController->GetPawn()))
@@ -124,21 +124,19 @@ void APlayerGameMode::HandleDreamGameCompleted()
 		ActiveDreamGameWidget = nullptr;
 	}
 
-	AMyPlayerController* PlayerController = Cast<AMyPlayerController>(GetWorld()->GetFirstPlayerController());
-	if (PlayerController)
+	AMyPlayerController* PlayerController = GetMyPlayerController();
+	UEnhancedInputLocalPlayerSubsystem* Subsystem = GetEnhancedInputSubsystem();
+	if (PlayerController && Subsystem)
 	{
-		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
-		{
-			// 2Dゲーム用マッピングを外し、3Dキャラ操作用マッピングに戻す
-			Subsystem->RemoveMappingContext(Player2DContext);
+		// 2Dゲーム用マッピングを外し、3Dキャラ操作用マッピングに戻す
+		Subsystem->RemoveMappingContext(Player2DContext);
 
-			// 決定を押した後、次のフェーズで同じキーの入力をすぐには受け付けないように設定
-			FModifyContextOptions Options = {};
-			Options.bIgnoreAllPressedKeysUntilRelease = true; // 切替後ジャンプ等の暴発を防ぐため、すべての押下中のキーが離されるまで無視する
-			if (const APlayerCharacter* Character = Cast<APlayerCharacter>(PlayerController->GetPawn()))
-			{
-				Subsystem->AddMappingContext(Character->GetPlayer3DContext(), 0, Options);
-			}
+		// 決定を押した後、次のフェーズで同じキーの入力をすぐには受け付けないように設定
+		FModifyContextOptions Options = {};
+		Options.bIgnoreAllPressedKeysUntilRelease = true; // 切替後ジャンプ等の暴発を防ぐため、すべての押下中のキーが離されるまで無視する
+		if (const APlayerCharacter* Character = Cast<APlayerCharacter>(PlayerController->GetPawn()))
+		{
+			Subsystem->AddMappingContext(Character->GetPlayer3DContext(), 0, Options);
 		}
 	}
 
@@ -152,7 +150,7 @@ void APlayerGameMode::ShowResultWidget()
 
 	if (ResultWidgetClass)
 	{
-		AMyPlayerController* PlayerController = Cast<AMyPlayerController>(GetWorld()->GetFirstPlayerController());
+		AMyPlayerController* PlayerController = GetMyPlayerController();
 		if (PlayerController)
 		{
 			PlayerController->OpenMenuWidget(ResultWidgetClass);
@@ -174,4 +172,18 @@ void APlayerGameMode::SetPhaseWidgetInteraction(bool bEnabled)
 			ActiveDreamGameWidget->FocusCompletedButton();
 		}
 	}
+}
+
+AMyPlayerController* APlayerGameMode::GetMyPlayerController() const
+{
+	return Cast<AMyPlayerController>(GetWorld()->GetFirstPlayerController());
+}
+
+UEnhancedInputLocalPlayerSubsystem* APlayerGameMode::GetEnhancedInputSubsystem() const
+{
+	if (const AMyPlayerController* PlayerController = GetMyPlayerController())
+	{
+		return ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer());
+	}
+	return nullptr;
 }
