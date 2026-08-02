@@ -108,6 +108,18 @@ void AMyPlayerController::SetupInputComponent()
 
 void AMyPlayerController::RefreshInputProfile()
 {
+	const APlayerGameMode* GameMode = GetWorld()->GetAuthGameMode<APlayerGameMode>();
+	if (!GameMode)
+	{
+		return;
+	}
+
+	const EGamePhase CurrentPhase = GameMode->GetCurrentPhase();
+	const FInputProfile InputProfile = GameMode->GetInputProfileForPhase(CurrentPhase);
+
+	// 現在の入力プロファイルに応じたIMCを適用する
+	ApplyMappingContexts(InputProfile.MappingContexts);
+
 	// ウィジェットが開いている場合はその入力プロファイルを適用する
 	if (ActiveMenuWidget)
 	{
@@ -116,12 +128,7 @@ void AMyPlayerController::RefreshInputProfile()
 	// 開いていない場合はゲームモードの現在のフェーズに応じた入力プロファイルを適用する
 	else
 	{
-		if (const APlayerGameMode* GameMode = GetWorld()->GetAuthGameMode<APlayerGameMode>())
-		{
-			const EGamePhase CurrentPhase = GameMode->GetCurrentPhase();
-			const FInputProfile InputProfile = GameMode->GetInputProfileForPhase(CurrentPhase);
-			ApplyMenuInputMode(InputProfile, false);
-		}
+		ApplyMenuInputMode(InputProfile, false);
 	}
 }
 
@@ -148,4 +155,30 @@ void AMyPlayerController::PauseGame()
 	}
 
 	OpenMenuWidget(PauseWidgetClass);
+}
+
+void AMyPlayerController::ApplyMappingContexts(const TArray<TObjectPtr<UInputMappingContext>>& MappingContexts)
+{
+	UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
+	if (!Subsystem)
+	{
+		return;
+	}
+
+	// 現時点で割り当てているIMCを全てクリアする
+	Subsystem->ClearAllMappings();
+
+	// 新しいIMCを全て追加する
+	for (const TObjectPtr<UInputMappingContext>& Context : MappingContexts)
+	{
+		if (Context)
+		{
+			// デフォルトでbIgnoreAllPressedKeysUntilRelease = trueなので、Optionは指定しなくてよい
+			Subsystem->AddMappingContext(Context, 0);
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("ApplyMappingContexts: null IMC in profile array (unassigned element in editor?)"));
+		}
+	}
 }

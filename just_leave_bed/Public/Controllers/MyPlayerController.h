@@ -30,6 +30,7 @@ protected:
 
 private:
 	void PauseGame();
+	void ApplyMappingContexts(const TArray<TObjectPtr<UInputMappingContext>>& MappingContexts);
 
 	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputAction* PauseAction;
