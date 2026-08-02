@@ -39,9 +39,6 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Phase")
 	TMap<EGamePhase, FInputProfile> PhaseInputProfiles;
 
-	UPROPERTY(EditAnywhere, Category = "Phase")
-	UInputMappingContext* Player2DContext;
-
 	UPROPERTY(EditAnywhere, Category = "UI")
 	TSubclassOf<UDreamGameWidget> DreamGameWidgetClass;
 
@@ -54,7 +51,6 @@ protected:
 private:
 	void HandleDreamGameCompleted();
 	AMyPlayerController* GetMyPlayerController() const;
-	UEnhancedInputLocalPlayerSubsystem* GetEnhancedInputSubsystem() const;
 
 	UPROPERTY()
 	TObjectPtr<UDreamGameWidget> ActiveDreamGameWidget;

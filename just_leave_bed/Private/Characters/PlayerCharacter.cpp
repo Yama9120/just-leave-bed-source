@@ -1,9 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Characters/PlayerCharacter.h"
-#include "Components/InputComponent.h"
 #include "EnhancedInputComponent.h"
-#include "EnhancedInputSubsystems.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Animation/AnimInstance.h"
@@ -48,15 +46,6 @@ void APlayerCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	SetRotationMode(RotationMode);
-
-	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
-	{
-		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
-		{
-			Subsystem->AddMappingContext(Player3DContext, 0);
-			Subsystem->AddMappingContext(SystemContext, 0);
-		}
-	}
 }
 
 void APlayerCharacter::Move(const FInputActionValue& Value)

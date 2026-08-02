@@ -36,16 +36,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Character")
 	void SetRotationMode(ERotationMode NewRotationMode);
 
-	// Player3DContextを取得する関数
-	UInputMappingContext* GetPlayer3DContext() const { return Player3DContext; }
-
 protected:
 	virtual void BeginPlay() override;
 
-	UPROPERTY(EditAnywhere, Category = "Input")
-	UInputMappingContext* Player3DContext;
-	UPROPERTY(EditAnywhere, Category = "Input")
-	UInputMappingContext* SystemContext;
 	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputAction* MovementAction;
 	UPROPERTY(EditAnywhere, Category = "Input")
