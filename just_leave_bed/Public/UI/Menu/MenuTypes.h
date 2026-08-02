@@ -3,6 +3,8 @@
 #include "CoreMinimal.h"
 #include "MenuTypes.generated.h"
 
+class UInputMappingContext;
+
 // 入力モードの種類を列挙型で定義
 UENUM(BlueprintType)
 enum class EMenuInputMode : uint8
@@ -16,6 +18,10 @@ USTRUCT(BlueprintType)
 struct FInputProfile
 {
 	GENERATED_BODY()
+
+	// プロファイル適用時に有効になるIMC一式（総置き換え：ここに無いIMCは外される）
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TArray<TObjectPtr<UInputMappingContext>> MappingContexts;
 
 	// 入力モード（Game/UI/両方）
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
