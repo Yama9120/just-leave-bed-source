@@ -7,6 +7,12 @@
 #include "Blueprint/UserWidget.h"
 #include "Controllers/MyPlayerController.h"
 #include "Characters/PlayerCharacter.h"
+#include "Cutscene/CutsceneManager.h"
+
+APlayerGameMode::APlayerGameMode()
+{
+	CutsceneManager = CreateDefaultSubobject<UCutsceneManager>(TEXT("CutsceneManager"));
+}
 
 void APlayerGameMode::BeginPlay()
 {

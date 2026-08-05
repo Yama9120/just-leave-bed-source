@@ -14,6 +14,7 @@ class UDreamGameWidget;
 class UInputMappingContext;
 class AMyPlayerController;
 class UEnhancedInputLocalPlayerSubsystem;
+class UCutsceneManager;
 
 /**
  *
@@ -34,6 +35,7 @@ public:
 	void EnterDreamGame();
 
 protected:
+	APlayerGameMode();
 	virtual void BeginPlay() override;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Phase")
@@ -47,6 +49,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "UI")
 	TSubclassOf<UResultWidget> ResultWidgetClass;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Cutscene")
+	TObjectPtr<UCutsceneManager> CutsceneManager;
 
 private:
 	void HandleDreamGameCompleted();
