@@ -13,6 +13,20 @@ UCutsceneManager::UCutsceneManager()
 
 void UCutsceneManager::PlayCutscene(ULevelSequence* _LevelSequence)
 {
+	// レベルシーケンスがnullの場合は終了
+	if (!_LevelSequence)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("PlayCutscene: LevelSequence is null."));
+		return;
+	}
+
+	// 他に再生中のレベルシーケンスがある場合は終了
+	if (IsPlaying())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("PlayCutscene: already playing. Request ignored."));
+		return;
+	}
+
 	FMovieSceneSequencePlaybackSettings _Settings;
 	ALevelSequenceActor* _OutActor = nullptr;
 
@@ -37,14 +51,18 @@ void UCutsceneManager::StopCutscene()
 	// 再生停止
 	if (LevelSequencePlayer)
 	{
-		LevelSequencePlayer.Get()->Stop();
+		LevelSequencePlayer->Stop();
 	}
 }
 
 bool UCutsceneManager::IsPlaying() const
 {
 	// 再生中かどうかを返す
-	return (LevelSequencePlayer.Get()->IsPlaying());
+	if (LevelSequencePlayer)
+	{
+		return LevelSequencePlayer->IsPlaying();
+	}
+	return false;
 }
 
 void UCutsceneManager::CallBackFinished()
