@@ -26,6 +26,11 @@ void APlayerGameMode::BeginPlay()
 			PlayerController->OpenMenuWidget(StartWidgetClass);
 		}
 	}
+
+	if (IntroCutscene)
+	{
+		CutsceneManager->OnCutsceneFinished.AddDynamic(this, &APlayerGameMode::HandleIntroCutsceneFinished);
+	}
 }
 
 FInputProfile APlayerGameMode::GetInputProfileForPhase(EGamePhase Phase) const
@@ -73,8 +78,8 @@ bool APlayerGameMode::CanPause() const
 
 void APlayerGameMode::EnterDreamGame()
 {
-	// 遷移元のフェーズを確認する（※現在は仮にタイトルからの遷移を想定）
-	if (CurrentPhase != EGamePhase::EGP_Title)
+	// 現在のフェーズが2Dイントロムービーでない場合は何もしない
+	if (CurrentPhase != EGamePhase::EGP_2DIntroMovie)
 	{
 		return;
 	}
@@ -105,6 +110,18 @@ void APlayerGameMode::EnterDreamGame()
 	// ウィジェットをビューポートに追加する
 	Widget->AddToViewport();
 	ActiveDreamGameWidget = Widget;
+}
+
+void APlayerGameMode::StartIntroCutscene()
+{
+	if (IntroCutscene && CutsceneManager)
+	{
+		// 2Dイントロムービーのフェーズに遷移する
+		SetPhase(EGamePhase::EGP_2DIntroMovie);
+
+		// イントロムービーを再生する
+		CutsceneManager->PlayCutscene(IntroCutscene);
+	}
 }
 
 void APlayerGameMode::HandleDreamGameCompleted()
@@ -156,4 +173,9 @@ void APlayerGameMode::SetPhaseWidgetInteraction(bool bEnabled)
 AMyPlayerController* APlayerGameMode::GetMyPlayerController() const
 {
 	return Cast<AMyPlayerController>(GetWorld()->GetFirstPlayerController());
+}
+
+void APlayerGameMode::HandleIntroCutsceneFinished()
+{
+	EnterDreamGame();
 }

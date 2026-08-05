@@ -10,7 +10,7 @@ void UStartWidget::OnButtonPlayClicked(UMenuButton* Button)
 	// ゲームのフェーズを3Dゲームに変更する
 	if (APlayerGameMode* GameMode = GetWorld()->GetAuthGameMode<APlayerGameMode>())
 	{
-		// ※一旦間のムービーはスキップして、直接2Dゲームに入る
-		GameMode->EnterDreamGame();
+		// スタート画面でスタートボタンを押したときに、イントロムービーを再生する
+		GameMode->StartIntroCutscene();
 	}
 }

@@ -15,6 +15,7 @@ class UInputMappingContext;
 class AMyPlayerController;
 class UEnhancedInputLocalPlayerSubsystem;
 class UCutsceneManager;
+class ULevelSequence;
 
 /**
  *
@@ -33,6 +34,7 @@ public:
 	FInputProfile GetInputProfileForPhase(EGamePhase Phase) const;
 	bool CanPause() const;
 	void EnterDreamGame();
+	void StartIntroCutscene();
 
 protected:
 	APlayerGameMode();
@@ -53,9 +55,15 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Cutscene")
 	TObjectPtr<UCutsceneManager> CutsceneManager;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Cutscene")
+	TObjectPtr<ULevelSequence> IntroCutscene;
+
 private:
 	void HandleDreamGameCompleted();
 	AMyPlayerController* GetMyPlayerController() const;
+
+	UFUNCTION()
+	void HandleIntroCutsceneFinished();
 
 	UPROPERTY()
 	TObjectPtr<UDreamGameWidget> ActiveDreamGameWidget;
