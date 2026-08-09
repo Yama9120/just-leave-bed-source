@@ -14,6 +14,7 @@ class UDreamGameWidget;
 class UInputMappingContext;
 class AMyPlayerController;
 class UEnhancedInputLocalPlayerSubsystem;
+class ACineCameraActor;
 class UCutsceneManager;
 class ULevelSequence;
 
@@ -40,6 +41,8 @@ protected:
 	APlayerGameMode();
 	virtual void BeginPlay() override;
 
+	void SetupTitleCamera();
+
 	UPROPERTY(EditDefaultsOnly, Category = "Phase")
 	TMap<EGamePhase, FInputProfile> PhaseInputProfiles;
 
@@ -51,6 +54,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "UI")
 	TSubclassOf<UResultWidget> ResultWidgetClass;
+
+	UPROPERTY()
+	TObjectPtr<ACineCameraActor> TitleCamera;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Cutscene")
 	TObjectPtr<UCutsceneManager> CutsceneManager;

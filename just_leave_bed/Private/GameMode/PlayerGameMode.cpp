@@ -7,6 +7,8 @@
 #include "Blueprint/UserWidget.h"
 #include "Controllers/MyPlayerController.h"
 #include "Characters/PlayerCharacter.h"
+#include "CineCameraActor.h"
+#include "EngineUtils.h"
 #include "Cutscene/CutsceneManager.h"
 
 APlayerGameMode::APlayerGameMode()
@@ -17,6 +19,8 @@ APlayerGameMode::APlayerGameMode()
 void APlayerGameMode::BeginPlay()
 {
 	Super::BeginPlay();
+
+	SetupTitleCamera();
 
 	if (StartWidgetClass)
 	{
@@ -30,6 +34,35 @@ void APlayerGameMode::BeginPlay()
 	if (IntroCutscene)
 	{
 		CutsceneManager->OnCutsceneFinished.AddDynamic(this, &APlayerGameMode::HandleIntroCutsceneFinished);
+	}
+}
+
+void APlayerGameMode::SetupTitleCamera()
+{
+	// レベル内のすべての CineCameraActor を検索し、"TitleCamera" タグを持つものを見つける
+	for (TActorIterator<ACineCameraActor> It(GetWorld()); It; ++It)
+	{
+		if (It->ActorHasTag(TEXT("TitleCamera")))
+		{
+			TitleCamera = *It;
+			break;
+		}
+	}
+
+	if (!TitleCamera)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("BeginPlay: TitleCamera not found in level."));
+	}
+	else
+	{
+		// タイトルカメラに切り替える処理を次のティックに遅延させる
+		GetWorldTimerManager().SetTimerForNextTick([this]() {
+			if (AMyPlayerController* PC = GetMyPlayerController())
+			{
+				// タイトルカメラに切り替える
+				PC->SetViewTarget(TitleCamera);
+			}
+		});
 	}
 }
 
