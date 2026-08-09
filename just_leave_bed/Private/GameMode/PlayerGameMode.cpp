@@ -169,8 +169,16 @@ void APlayerGameMode::HandleDreamGameCompleted()
 		ActiveDreamGameWidget = nullptr;
 	}
 
+	// ----------------------------------------------------------
 	// 2Dゲームクリア後、フェーズを切り替える（※現在は仮に3Dゲームフェーズに戻す）
 	SetPhase(EGamePhase::EGP_3DGame);
+
+	// 仮繋ぎ: Wakeムービー実装時にカットシーン経由へ差し替え
+	if (AMyPlayerController* PC = GetMyPlayerController())
+	{
+		PC->SetViewTarget(PC->GetPawn());
+	}
+	// ----------------------------------------------------------
 }
 
 void APlayerGameMode::ShowResultWidget()
