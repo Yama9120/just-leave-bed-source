@@ -4,6 +4,7 @@
 #include "Components/Button.h"
 #include "UI/Menu/MenuButton.h"
 #include "Controllers/MyPlayerController.h"
+#include "System/RunTracker.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetSystemLibrary.h"
 
@@ -47,6 +48,12 @@ void UBaseWidget::OnButtonQuitClicked(UMenuButton* Button)
 
 void UBaseWidget::OnButtonReStartClicked(UMenuButton* Button)
 {
+	// リトライ回数を加算する
+	if (URunTracker* Tracker = GetGameInstance()->GetSubsystem<URunTracker>())
+	{
+		Tracker->AddRetry();
+	}
+
 	// ゲームのポーズを解除する（止めていたゲームの再開）
 	UGameplayStatics::SetGamePaused(GetWorld(), false);
 
