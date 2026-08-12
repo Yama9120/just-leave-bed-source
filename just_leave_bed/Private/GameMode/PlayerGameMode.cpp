@@ -10,9 +10,12 @@
 #include "CineCameraActor.h"
 #include "EngineUtils.h"
 #include "Cutscene/CutsceneManager.h"
+#include "System/RunTracker.h"
 
 APlayerGameMode::APlayerGameMode()
 {
+	PrimaryActorTick.bCanEverTick = true;
+
 	CutsceneManager = CreateDefaultSubobject<UCutsceneManager>(TEXT("CutsceneManager"));
 }
 
@@ -34,6 +37,20 @@ void APlayerGameMode::BeginPlay()
 	if (IntroCutscene)
 	{
 		CutsceneManager->OnCutsceneFinished.AddDynamic(this, &APlayerGameMode::HandleIntroCutsceneFinished);
+	}
+}
+
+void APlayerGameMode::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+
+	// ゲームフェーズが2Dゲームまたは3Dゲームの場合、RunTrackerにゲーム時間を追加する
+	if (CurrentPhase == EGamePhase::EGP_2DGame || CurrentPhase == EGamePhase::EGP_3DGame)
+	{
+		if (URunTracker* Tracker = GetGameInstance()->GetSubsystem<URunTracker>())
+		{
+			Tracker->AddGameTime(DeltaSeconds);
+		}
 	}
 }
 
