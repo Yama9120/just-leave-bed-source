@@ -16,4 +16,5 @@ class JUST_LEAVE_BED_API UResultWidget : public UBaseWidget
 
 protected:
 	virtual void SetInitialFocus() override;
+	virtual void OnButtonReStartClicked(UMenuButton* Button) override;
 };
