@@ -20,6 +20,10 @@ APlayerCharacter::APlayerCharacter()
 	SpringArm->TargetArmLength = 300.f;
 	SpringArm->bUsePawnControlRotation = true;
 
+	// カメララグを有効にして、カメラがなめらかに追従されるように設定
+	SpringArm->bEnableCameraLag = true;
+	SpringArm->CameraLagSpeed = 15.f;
+
 	ViewCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("ViewCamera"));
 	ViewCamera->SetupAttachment(SpringArm);
 	ViewCamera->bUsePawnControlRotation = false;
