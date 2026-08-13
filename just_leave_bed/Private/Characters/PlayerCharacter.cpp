@@ -50,6 +50,8 @@ void APlayerCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	SetRotationMode(RotationMode);
+
+	PreviousActorZ = GetActorLocation().Z;
 }
 
 void APlayerCharacter::Move(const FInputActionValue& Value)
@@ -195,6 +197,28 @@ void APlayerCharacter::OnEndCrouch(float HeightAdjust, float ScaledHeightAdjust)
 	TargetCameraZ = 0.f;
 }
 
+void APlayerCharacter::UpdateMeshStepSmoothing(float DeltaTime)
+{
+	// 前フレームからのカプセルのZ座標の変化量を計算する
+	const float CurrentActorZ = GetActorLocation().Z;
+	const float DeltaZ = CurrentActorZ - PreviousActorZ;
+	PreviousActorZ = CurrentActorZ;
+
+	// 「通常の移動」として説明できる1フレームあたりのZ変化量の上限
+	const float MaxExplainableDelta = MaxSmoothVerticalSpeed * DeltaTime;
+
+	// 上限を超えた分（例：段差乗り越えによる瞬間移動の成分）だけを取り出す
+	const float SnapDelta = DeltaZ - FMath::Clamp(DeltaZ, -MaxExplainableDelta, MaxExplainableDelta);
+
+	const float PreviousOffset = MeshStepZOffset;
+
+	// 段差の影響でメッシュが上下する量を滑らかに補間する
+	MeshStepZOffset = FMath::FInterpTo(MeshStepZOffset - SnapDelta, 0.f, DeltaTime, MeshStepInterpSpeed);
+
+	// メッシュのZ座標を補間後の段差の影響量に応じて上下させる
+	GetMesh()->AddRelativeLocation(FVector(0.f, 0.f, MeshStepZOffset - PreviousOffset));
+}
+
 void APlayerCharacter::Jump()
 {
 	// すでにアクション中の場合はジャンプできない
@@ -258,6 +282,8 @@ void APlayerCharacter::Tick(float DeltaTime)
 	const FVector TargetCameraLocation = FVector(CurrentCameraLocation.X, CurrentCameraLocation.Y, TargetCameraZ);
 	const FVector SmoothedCameraLocation = FMath::VInterpTo(CurrentCameraLocation, TargetCameraLocation, DeltaTime, CameraInterpSpeed);
 	SpringArm->TargetOffset = SmoothedCameraLocation;
+
+	UpdateMeshStepSmoothing(DeltaTime);
 }
 
 void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)

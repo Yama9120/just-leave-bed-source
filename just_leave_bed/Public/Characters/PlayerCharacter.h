@@ -68,6 +68,14 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Combat", meta = (ClampMin = "0.1"))
 	float DodgeDistanceScale = 2.f;
 
+	// 段差でキャラクターが上下する際のメッシュの補間処理に使用する変数
+	UPROPERTY(EditAnywhere, Category = "StepSmooth")
+	float MeshStepInterpSpeed = 13.f;
+	UPROPERTY(EditAnywhere, Category = "StepSmooth")
+	float MaxMeshStepOffset = 50.f;
+	UPROPERTY(EditAnywhere, Category = "StepSmooth")
+	float MaxSmoothVerticalSpeed = 350.f;
+
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
 	void Dodge();
@@ -82,6 +90,8 @@ protected:
 	virtual void OnEndCrouch(float HeightAdjust, float ScaledHeightAdjust) override;
 
 private:
+	void UpdateMeshStepSmoothing(float DeltaTime);
+
 	UPROPERTY(VisibleAnywhere, Category = "Camera")
 	USpringArmComponent* SpringArm;
 	UPROPERTY(VisibleAnywhere, Category = "Camera")
@@ -94,6 +104,12 @@ private:
 	float TargetCameraZ = 0.f;
 	UPROPERTY(EditDefaultsOnly, Category = "Camera")
 	float CameraInterpSpeed = 3.f;
+
+	// 段差でキャラクターが上下する際のメッシュの補間処理に使用する変数
+	float MeshStepZOffset = 0.f;
+	float PreviousActorZ = 0.f;
+	bool bWasOnGround = false;
+	bool bWasCrouchedLastFrame = false;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	UAnimMontage* DodgeMontage;
