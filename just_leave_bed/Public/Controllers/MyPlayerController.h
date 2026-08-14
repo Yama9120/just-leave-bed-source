@@ -29,8 +29,12 @@ protected:
 	virtual void SetupInputComponent() override;
 
 private:
+	void SkipCutscene();
 	void PauseGame();
 	void ApplyMappingContexts(const TArray<TObjectPtr<UInputMappingContext>>& MappingContexts);
+
+	UPROPERTY(EditAnywhere, Category = "Input")
+	UInputAction* SkipCutsceneAction;
 
 	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputAction* PauseAction;

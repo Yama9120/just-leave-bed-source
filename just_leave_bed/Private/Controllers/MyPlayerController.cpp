@@ -103,6 +103,7 @@ void AMyPlayerController::SetupInputComponent()
 	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(InputComponent))
 	{
 		EnhancedInputComponent->BindAction(PauseAction, ETriggerEvent::Started, this, &AMyPlayerController::PauseGame);
+		EnhancedInputComponent->BindAction(SkipCutsceneAction, ETriggerEvent::Started, this, &AMyPlayerController::SkipCutscene);
 	}
 }
 
@@ -129,6 +130,15 @@ void AMyPlayerController::RefreshInputProfile()
 	else
 	{
 		ApplyMenuInputMode(InputProfile, false);
+	}
+}
+
+void AMyPlayerController::SkipCutscene()
+{
+	// ゲームモードにカットシーンスキップを通知する
+	if (APlayerGameMode* GameMode = GetWorld()->GetAuthGameMode<APlayerGameMode>())
+	{
+		GameMode->SkipCurrentCutscene();
 	}
 }
 

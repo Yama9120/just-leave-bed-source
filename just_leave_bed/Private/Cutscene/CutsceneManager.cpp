@@ -55,6 +55,18 @@ void UCutsceneManager::StopCutscene()
 	}
 }
 
+void UCutsceneManager::SkipCutscene()
+{
+	// 再生中の場合はスキップする
+	if (IsPlaying())
+	{
+		LevelSequencePlayer->GoToEndAndStop();
+
+		// スキップするだけではOnFinishedが呼ばれないので、手動で呼び出す
+		CallBackFinished();
+	}
+}
+
 bool UCutsceneManager::IsPlaying() const
 {
 	// 再生中かどうかを返す

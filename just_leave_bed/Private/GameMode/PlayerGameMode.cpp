@@ -228,6 +228,14 @@ void APlayerGameMode::SetPhaseWidgetInteraction(bool bEnabled)
 	}
 }
 
+void APlayerGameMode::SkipCurrentCutscene()
+{
+	if (CutsceneManager)
+	{
+		CutsceneManager->SkipCutscene();
+	}
+}
+
 AMyPlayerController* APlayerGameMode::GetMyPlayerController() const
 {
 	return Cast<AMyPlayerController>(GetWorld()->GetFirstPlayerController());

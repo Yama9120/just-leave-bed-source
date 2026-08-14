@@ -29,7 +29,7 @@ class JUST_LEAVE_BED_API APlayerGameMode : public AGameModeBase
 public:
 	void ShowResultWidget();
 	void SetPhaseWidgetInteraction(bool bEnabled);
-
+	void SkipCurrentCutscene();
 	void SetPhase(EGamePhase NewPhase);
 	EGamePhase GetCurrentPhase() const;
 	FInputProfile GetInputProfileForPhase(EGamePhase Phase) const;

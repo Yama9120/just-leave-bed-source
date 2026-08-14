@@ -27,6 +27,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void StopCutscene();
 
+	// スキップする
+	UFUNCTION(BlueprintCallable)
+	void SkipCutscene();
+
 	// 再生中か？
 	UFUNCTION(BlueprintCallable)
 	bool IsPlaying() const;
