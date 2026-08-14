@@ -148,6 +148,13 @@ void APlayerGameMode::EnterDreamGame()
 	// 2Dゲームフェーズに遷移する
 	SetPhase(EGamePhase::EGP_2DGame);
 
+	if (ActiveSkipGuideWidget)
+	{
+		// スキップガイドウィジェットを削除する
+		ActiveSkipGuideWidget->RemoveFromParent();
+		ActiveSkipGuideWidget = nullptr;
+	}
+
 	UDreamGameWidget* Widget = CreateWidget<UDreamGameWidget>(PlayerController, DreamGameWidgetClass);
 	if (!Widget)
 	{
@@ -171,6 +178,13 @@ void APlayerGameMode::StartIntroCutscene()
 
 		// イントロムービーを再生する
 		CutsceneManager->PlayCutscene(IntroCutscene);
+
+		// スキップガイドウィジェットを表示する
+		ActiveSkipGuideWidget = CreateWidget<UUserWidget>(GetMyPlayerController(), SkipGuideWidgetClass);
+		if (ActiveSkipGuideWidget)
+		{
+			ActiveSkipGuideWidget->AddToViewport();
+		}
 	}
 }
 

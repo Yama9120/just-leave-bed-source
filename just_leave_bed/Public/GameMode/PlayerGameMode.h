@@ -56,6 +56,12 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "UI")
 	TSubclassOf<UResultWidget> ResultWidgetClass;
 
+	UPROPERTY(EditAnywhere, Category = "UI")
+	TSubclassOf<UUserWidget> SkipGuideWidgetClass;
+
+	UPROPERTY()
+	TObjectPtr<UUserWidget> ActiveSkipGuideWidget;
+
 	UPROPERTY()
 	TObjectPtr<ACineCameraActor> TitleCamera;
 
