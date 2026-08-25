@@ -97,6 +97,10 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = "Camera")
 	UCameraComponent* ViewCamera;
 
+	// ジャンプ連打防止用
+	float LastJumpTime = 0.0f;
+	float JumpCoolTime = 0.6f;
+
 	// しゃがみ時のカメラのZ座標オフセット
 	UPROPERTY(EditDefaultsOnly, Category = "Camera")
 	float CrouchCameraZOffset = 40.f;

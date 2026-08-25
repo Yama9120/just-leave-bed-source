@@ -227,12 +227,22 @@ void APlayerCharacter::Jump()
 		return;
 	}
 
+	float CurrentTime = GetWorld()->GetTimeSeconds();
+	// 以前のジャンプからクールタイム
+	if (CurrentTime - LastJumpTime < JumpCoolTime)
+	{
+		return;
+	}
+
 	if (bIsCrouched)
 	{
 		UnCrouch();
 	}
 
 	Super::Jump();
+
+	// ジャンプ時の時間を保持
+	LastJumpTime = CurrentTime;
 }
 
 void APlayerCharacter::ToggleCrouch()
