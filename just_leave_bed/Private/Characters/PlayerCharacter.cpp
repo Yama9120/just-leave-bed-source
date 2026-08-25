@@ -184,6 +184,11 @@ void APlayerCharacter::OnStartCrouch(float HeightAdjust, float ScaledHeightAdjus
 
 	// オフセット分だけカメラのZ座標を下げる
 	TargetCameraZ = -CrouchCameraZOffset;
+
+	// カプセルサイズ変更によるZ移動を段差スムージングの対象から除外
+	PreviousActorZ = GetActorLocation().Z;
+	// Super側でメッシュ相対Zが絶対値で再設定されるため、オフセットもリセットして整合を取る
+	MeshStepZOffset = 0.f;
 }
 
 void APlayerCharacter::OnEndCrouch(float HeightAdjust, float ScaledHeightAdjust)
@@ -195,6 +200,11 @@ void APlayerCharacter::OnEndCrouch(float HeightAdjust, float ScaledHeightAdjust)
 
 	// カメラのZ座標を元に戻す
 	TargetCameraZ = 0.f;
+
+	// カプセルサイズ変更によるZ移動を段差スムージングの対象から除外
+	PreviousActorZ = GetActorLocation().Z;
+	// Super側でメッシュ相対Zが絶対値で再設定されるため、オフセットもリセットして整合を取る
+	MeshStepZOffset = 0.f;
 }
 
 void APlayerCharacter::UpdateMeshStepSmoothing(float DeltaTime)
