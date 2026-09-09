@@ -1,29 +1,24 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Items/StageTransitionTrigger.h"
-#include "Characters/PlayerCharacter.h"
 #include "System/StageStreamingSubsystem.h"
 
-void AStageTransitionTrigger::OnBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void AStageTransitionTrigger::OnPlayerOverlap(APlayerCharacter* Player)
 {
-	// 重なったアクターがプレイヤーキャラクターかどうかを確認
-	APlayerCharacter* Player = Cast<APlayerCharacter>(OtherActor);
-	if (Player)
+	// 特定の位置（ロード/アンロード地点）に来た場合の処理
+	UStageStreamingSubsystem* StageStreamingSubsystem = GetGameInstance()->GetSubsystem<UStageStreamingSubsystem>();
+	if (!StageStreamingSubsystem)
 	{
-		UStageStreamingSubsystem* StageStreamingSubsystem = GetGameInstance()->GetSubsystem<UStageStreamingSubsystem>();
-		if (!StageStreamingSubsystem)
-		{
-			return;
-		}
+		return;
+	}
 
-		// 特定の位置（ロード/アンロード地点）に来た場合、bIsPreloadの値に応じてレベルをロードまたはアンロードする
-		if (bIsPreload)
-		{
-			StageStreamingSubsystem->LoadStage(TargetStageName);
-		}
-		else
-		{
-			StageStreamingSubsystem->UnloadStage(TargetStageName);
-		}
+	// bIsPreloadの値に応じてレベルをロードまたはアンロードする
+	if (bIsPreload)
+	{
+		StageStreamingSubsystem->LoadStage(TargetStageName);
+	}
+	else
+	{
+		StageStreamingSubsystem->UnloadStage(TargetStageName);
 	}
 }

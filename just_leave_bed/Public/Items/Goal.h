@@ -15,5 +15,5 @@ class JUST_LEAVE_BED_API AGoal : public ABaseItem
 	GENERATED_BODY()
 
 protected:
-	virtual void OnBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) override;
+	virtual void OnPlayerOverlap(APlayerCharacter* Player);
 };
