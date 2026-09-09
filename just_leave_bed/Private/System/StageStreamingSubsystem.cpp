@@ -15,7 +15,8 @@ void UStageStreamingSubsystem::LoadStage(FName StageName)
 
 	PendingLoadStage = StageName;
 
-	// bShould
+	// bShouldBlockOnLoadをfalseに設定して,ロード完了を待たずにゲームを動かし続ける(非同期)
+	// LoadStreamLevelが終わったらExecutionFunctionの関数が呼ばれる（エンジン内部での実装）
 	UGameplayStatics::LoadStreamLevel(this, StageName, true, false, LatentInfo);
 }
 
@@ -31,6 +32,8 @@ void UStageStreamingSubsystem::UnloadStage(FName StageName)
 
 	PendingUnloadStage = StageName;
 
+	// bShouldBlockOnUnloadをfalseに設定して,アンロード完了を待たずにゲームを動かし続ける(非同期)
+	// UnloadStreamLevelが終わったらExecutionFunctionの関数が呼ばれる（エンジン内部での実装）
 	UGameplayStatics::UnloadStreamLevel(this, StageName, LatentInfo, false);
 }
 
