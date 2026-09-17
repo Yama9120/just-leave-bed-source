@@ -4,9 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "MinigameBase.h"
 #include "DreamGameWidget.generated.h"
 
 class UMenuButton;
+class UOverlay;
 
 // マルチキャストデリゲートの宣言（引数なし）
 DECLARE_MULTICAST_DELEGATE(FOnDreamGameCompleted);
@@ -36,4 +38,16 @@ public:
 protected:
 	UPROPERTY(meta = (BindWidgetOptional))
 	TObjectPtr<UMenuButton> Completed;
+
+private:
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<UOverlay> MinigameSlot;
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UMinigameBase> MinigameClass;
+	UPROPERTY()
+	TObjectPtr<UMinigameBase> CurrentMinigame;
+
+	void LaunchMinigame();
+	UFUNCTION()
+	void HandleMinigameFinished(bool bSuccess);
 };
