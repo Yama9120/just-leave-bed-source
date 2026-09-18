@@ -3,6 +3,7 @@
 #include "UI/DreamGame/DreamGameWidget.h"
 #include "UI/Menu/MenuButton.h"
 #include "Components/Overlay.h"
+#include "Components/OverlaySlot.h"
 
 void UDreamGameWidget::NativeConstruct()
 {
@@ -60,8 +61,16 @@ void UDreamGameWidget::LaunchMinigame()
 	}
 
 	// ミニゲームをスロットに追加する
-	MinigameSlot->AddChild(CurrentMinigame);
+	MinigameSlot->AddChildToOverlay(CurrentMinigame);
 	UE_LOG(LogTemp, Log, TEXT("Minigame %s launched."), *CurrentMinigame->GetName());
+
+	// 正確な位置合わせのために、OverlaySlotを取得して配置を調整する
+	UOverlaySlot* OverlaySlot = MinigameSlot->AddChildToOverlay(CurrentMinigame);
+	if (OverlaySlot)
+	{
+		OverlaySlot->SetHorizontalAlignment(HAlign_Fill);
+		OverlaySlot->SetVerticalAlignment(VAlign_Fill);
+	}
 
 	// ミニゲームの終了を監視する
 	CurrentMinigame->OnMinigameFinished.AddUniqueDynamic(this, &UDreamGameWidget::HandleMinigameFinished);
