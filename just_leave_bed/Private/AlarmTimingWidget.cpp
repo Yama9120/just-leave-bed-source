@@ -42,6 +42,22 @@ void UAlarmTimingWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTi
 
 void UAlarmTimingWidget::OnStopButtonClicked(UMenuButton* Button)
 {
-	// TODO: タイミング判定実装時に TryStopAlarm 相当へ差し替える
-	FinishMinigame(true);
+	TryStopAlarm();
+}
+
+void UAlarmTimingWidget::TryStopAlarm()
+{
+	UE_LOG(LogTemp, Log, TEXT("GaugeValue: %f"), GaugeValue);
+
+	// 判定窓の範囲内かどうかをチェック
+	if (GaugeValue >= JudgeWindowCenter - JudgeWindowHalfWidth && GaugeValue <= JudgeWindowCenter + JudgeWindowHalfWidth)
+	{
+		// 判定窓内で停止した場合、ミニゲーム成功
+		FinishMinigame(true);
+	}
+	else
+	{
+		// 判定窓外で停止した場合、ミニゲーム失敗
+		FinishMinigame(false);
+	}
 }
