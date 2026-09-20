@@ -2,6 +2,7 @@
 
 #include "AlarmTimingWidget.h"
 #include "UI/Menu/MenuButton.h"
+#include "Components/ProgressBar.h"
 
 void UAlarmTimingWidget::NativeConstruct()
 {
@@ -10,6 +11,32 @@ void UAlarmTimingWidget::NativeConstruct()
 	if (StopButton)
 	{
 		StopButton->OnClicked.AddUniqueDynamic(this, &UAlarmTimingWidget::OnStopButtonClicked);
+	}
+}
+
+void UAlarmTimingWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
+{
+	Super::NativeTick(MyGeometry, InDeltaTime);
+
+	// ゲージの速度に応じて位置を更新
+	GaugeValue += GaugeDirection * GaugeSpeed * InDeltaTime;
+
+	// ゲージが端に到達したら方向を反転
+	if (GaugeValue >= 1.0f)
+	{
+		GaugeValue = 1.0f;
+		GaugeDirection = -1.0f;
+	}
+	else if (GaugeValue <= 0.0f)
+	{
+		GaugeValue = 0.0f;
+		GaugeDirection = 1.0f;
+	}
+
+	// ゲージの表示を更新
+	if (TimingGauge)
+	{
+		TimingGauge->SetPercent(GaugeValue);
 	}
 }
 
