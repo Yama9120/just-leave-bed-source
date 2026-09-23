@@ -2,7 +2,8 @@
 
 #include "UI/DreamGame/MinigameBase.h"
 
-// _Implementationを付けることで、BPでオーバーライド可能な関数として定義することができる
+// BlueprintNativeEventのC++既定実装。BPで上書きされない場合に呼ばれる。
+// 基底では空に保つ(BP上書き時に親呼び出しが省略され得るため、共通初期化は置かない)
 void UMinigameBase::StartMinigame_Implementation()
 {
 }

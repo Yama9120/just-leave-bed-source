@@ -20,10 +20,13 @@ class JUST_LEAVE_BED_API UAlarmTimingWidget : public UMinigameBase
 protected:
 	virtual void NativeConstruct() override;
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
+	virtual void StartMinigame_Implementation() override;
 
 private:
 	UFUNCTION()
 	void OnStopButtonClicked(UMenuButton* Button);
+	UFUNCTION()
+	void OnClearButtonClicked(UMenuButton* Button);
 	void TryStopAlarm();
 
 	UPROPERTY(meta = (BindWidget))
@@ -42,8 +45,16 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "AlarmTiming", meta = (ClampMin = "0.0"))
 	float JudgeWindowHalfWidth = 0.1f;
 
+	// このゲームの成功失敗を判定するスコア。ClearScore以上で成功、FailScore以下で失敗
+	int32 Score = 0;
+	int32 ClearScore = 3;
+	int32 FailScore = -3;
+	bool bIsCleared = false;
+
 	// アラーム停止ボタン
 	// TODO: タイミング判定実装時に入力に変換予定
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UMenuButton> StopButton;
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<UMenuButton> ClearButton;
 };

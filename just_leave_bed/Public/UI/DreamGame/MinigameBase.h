@@ -23,6 +23,7 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void StartMinigame();
+	virtual void StartMinigame_Implementation();
 	UFUNCTION(BlueprintCallable)
 	void FinishMinigame(bool bSuccess);
 };
