@@ -8,6 +8,7 @@
 
 class UMenuButton;
 class UProgressBar;
+class UImage;
 
 /**
  *
@@ -28,9 +29,8 @@ private:
 	UFUNCTION()
 	void OnClearButtonClicked(UMenuButton* Button);
 	void TryStopAlarm();
+	void UpdateJudgeWindowUI();
 
-	UPROPERTY(meta = (BindWidget))
-	TObjectPtr<UProgressBar> TimingGauge;
 	// ゲージの現在位置（0.0～1.0）
 	float GaugeValue = 0.0f;
 	// ゲージの移動方向（1.0で右、-1.0で左）
@@ -43,13 +43,19 @@ private:
 	float JudgeWindowCenter = 0.5f;
 	// 判定窓の半幅（判定窓の幅は JudgeWindowHalfWidth * 2）
 	UPROPERTY(EditDefaultsOnly, Category = "AlarmTiming", meta = (ClampMin = "0.0"))
-	float JudgeWindowHalfWidth = 0.1f;
+	float JudgeWindowHalfWidth = 0.15f;
 
 	// このゲームの成功失敗を判定するスコア。ClearScore以上で成功、FailScore以下で失敗
 	int32 Score = 0;
 	int32 ClearScore = 3;
 	int32 FailScore = -3;
 	bool bIsCleared = false;
+
+	// ゲージと判定窓のUI
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<UProgressBar> TimingGauge;
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<UImage> JudgeWindowImage;
 
 	// アラーム停止ボタン
 	// TODO: タイミング判定実装時に入力に変換予定

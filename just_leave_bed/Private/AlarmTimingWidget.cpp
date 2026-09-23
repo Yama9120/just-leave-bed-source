@@ -3,6 +3,8 @@
 #include "AlarmTimingWidget.h"
 #include "UI/Menu/MenuButton.h"
 #include "Components/ProgressBar.h"
+#include "Components/Image.h"
+#include "Components/CanvasPanelSlot.h"
 
 void UAlarmTimingWidget::NativeConstruct()
 {
@@ -63,6 +65,8 @@ void UAlarmTimingWidget::StartMinigame_Implementation()
 	{
 		ClearButton->SetVisibility(ESlateVisibility::Collapsed);
 	}
+
+	UpdateJudgeWindowUI();
 }
 
 void UAlarmTimingWidget::OnStopButtonClicked(UMenuButton* Button)
@@ -115,5 +119,20 @@ void UAlarmTimingWidget::TryStopAlarm()
 	else if (Score <= FailScore)
 	{
 		FinishMinigame(false);
+	}
+}
+
+void UAlarmTimingWidget::UpdateJudgeWindowUI()
+{
+	if (!JudgeWindowImage)
+	{
+		return;
+	}
+
+	// 判定窓の位置とサイズを更新
+	if (UCanvasPanelSlot* CanvasSlot = Cast<UCanvasPanelSlot>(JudgeWindowImage->Slot))
+	{
+		CanvasSlot->SetAnchors(FAnchors(JudgeWindowCenter - JudgeWindowHalfWidth, 0, JudgeWindowCenter + JudgeWindowHalfWidth, 1));
+		CanvasSlot->SetOffsets(FMargin(0));
 	}
 }
