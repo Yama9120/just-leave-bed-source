@@ -11,9 +11,9 @@ void UMenuButton::FocusInnerButton()
 	}
 }
 
-void UMenuButton::NativeConstruct()
+void UMenuButton::NativeOnInitialized()
 {
-	Super::NativeConstruct();
+	Super::NativeOnInitialized();
 
 	if (InnerButton)
 	{
