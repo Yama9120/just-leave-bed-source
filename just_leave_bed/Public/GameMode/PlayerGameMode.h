@@ -10,6 +10,7 @@
 
 class UStartWidget;
 class UResultWidget;
+class UFailWidget;
 class UDreamGameWidget;
 class UInputMappingContext;
 class AMyPlayerController;
@@ -55,6 +56,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "UI")
 	TSubclassOf<UResultWidget> ResultWidgetClass;
+
+	UPROPERTY(EditAnywhere, Category = "UI")
+	TSubclassOf<UFailWidget> FailWidgetClass;
 
 	UPROPERTY(EditAnywhere, Category = "UI")
 	TSubclassOf<UUserWidget> SkipGuideWidgetClass;
