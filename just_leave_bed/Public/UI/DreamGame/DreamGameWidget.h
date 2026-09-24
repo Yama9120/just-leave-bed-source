@@ -11,12 +11,12 @@ class UMenuButton;
 class UOverlay;
 
 // マルチキャストデリゲートの宣言（引数なし→クリアはtrue、失敗はfalseを返すようにするために引数ありへ）
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnDreamGameFinished, bool)
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnDreamGameFinished, bool);
 
-	/**
-	 *
-	 */
-	UCLASS(Abstract)
+/**
+ *
+ */
+UCLASS(Abstract)
 class JUST_LEAVE_BED_API UDreamGameWidget : public UUserWidget
 {
 	GENERATED_BODY()
