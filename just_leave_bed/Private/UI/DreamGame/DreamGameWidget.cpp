@@ -60,12 +60,10 @@ void UDreamGameWidget::LaunchMinigame()
 		return;
 	}
 
-	// ミニゲームをスロットに追加する
-	MinigameSlot->AddChildToOverlay(CurrentMinigame);
-	UE_LOG(LogTemp, Log, TEXT("Minigame %s launched."), *CurrentMinigame->GetName());
-
 	// 正確な位置合わせのために、OverlaySlotを取得して配置を調整する
 	UOverlaySlot* OverlaySlot = MinigameSlot->AddChildToOverlay(CurrentMinigame);
+	UE_LOG(LogTemp, Log, TEXT("Minigame %s launched."), *CurrentMinigame->GetName());
+
 	if (OverlaySlot)
 	{
 		OverlaySlot->SetHorizontalAlignment(HAlign_Fill);
