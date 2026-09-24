@@ -52,7 +52,11 @@ private:
 
 	// このゲームの成功失敗を判定するスコア。ClearScore以上で成功、FailScore以下で失敗
 	int32 Score = 0;
+	// クリアに必要なスコア（正の値）
+	UPROPERTY(EditDefaultsOnly, Category = "AlarmTiming", meta = (ClampMin = "1"))
 	int32 ClearScore = 3;
+	// 失敗となるスコア（負の値）
+	UPROPERTY(EditDefaultsOnly, Category = "AlarmTiming", meta = (ClampMax = "-1"))
 	int32 FailScore = -3;
 	bool bIsCleared = false;
 

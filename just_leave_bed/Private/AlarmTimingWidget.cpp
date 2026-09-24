@@ -151,8 +151,15 @@ void UAlarmTimingWidget::UpdateScoreGaugeUI()
 		return;
 	}
 
+	// スコアの範囲が不正な場合はゼロ除算を避けるため更新しない
+	const int32 ScoreRange = ClearScore - FailScore;
+	if (ScoreRange <= 0)
+	{
+		return;
+	}
+
 	// スコアゲージの表示を更新
-	float ScorePercent = static_cast<float>(Score - FailScore) / static_cast<float>(ClearScore - FailScore);
+	float ScorePercent = static_cast<float>(Score - FailScore) / static_cast<float>(ScoreRange);
 
 	ScoreGauge->SetPercent(ScorePercent);
 }
