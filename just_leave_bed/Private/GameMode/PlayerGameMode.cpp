@@ -3,6 +3,7 @@
 #include "GameMode/PlayerGameMode.h"
 #include "UI/Menu/StartWidget.h"
 #include "UI/Menu/ResultWidget.h"
+#include "UI/Menu/FailWidget.h"
 #include "UI/DreamGame/DreamGameWidget.h"
 #include "Blueprint/UserWidget.h"
 #include "Controllers/MyPlayerController.h"
@@ -162,7 +163,7 @@ void APlayerGameMode::EnterDreamGame()
 	}
 
 	// クリアイベントをバインドする
-	Widget->OnDreamGameCompleted.AddUObject(this, &APlayerGameMode::HandleDreamGameCompleted);
+	Widget->OnDreamGameFinished.AddUObject(this, &APlayerGameMode::HandleDreamGameFinished);
 
 	// ウィジェットをビューポートに追加する
 	Widget->AddToViewport();
@@ -188,28 +189,36 @@ void APlayerGameMode::StartIntroCutscene()
 	}
 }
 
-void APlayerGameMode::HandleDreamGameCompleted()
+void APlayerGameMode::HandleDreamGameFinished(bool bSuccess)
 {
-	if (ActiveDreamGameWidget)
+	if (bSuccess)
 	{
-		// クリアイベントのバインドを解除する
-		ActiveDreamGameWidget->OnDreamGameCompleted.RemoveAll(this);
+		// 2Dゲームクリア時のみウィジェットを削除する（失敗時はそのまま上書きする）
+		if (ActiveDreamGameWidget)
+		{
+			// クリアイベントのバインドを解除する
+			ActiveDreamGameWidget->OnDreamGameFinished.RemoveAll(this);
 
-		// ウィジェットをビューポートから削除する
-		ActiveDreamGameWidget->RemoveFromParent();
-		ActiveDreamGameWidget = nullptr;
+			// ウィジェットをビューポートから削除する
+			ActiveDreamGameWidget->RemoveFromParent();
+			ActiveDreamGameWidget = nullptr;
+		}
+
+		// ----------------------------------------------------------
+		// 2Dゲームクリア後、フェーズを切り替える（※現在は仮に3Dゲームフェーズに戻す）
+		SetPhase(EGamePhase::EGP_3DGame);
+
+		// 仮繋ぎ: Wakeムービー実装時にカットシーン経由へ差し替え
+		if (AMyPlayerController* PC = GetMyPlayerController())
+		{
+			PC->SetViewTarget(PC->GetPawn());
+		}
+		// ----------------------------------------------------------
 	}
-
-	// ----------------------------------------------------------
-	// 2Dゲームクリア後、フェーズを切り替える（※現在は仮に3Dゲームフェーズに戻す）
-	SetPhase(EGamePhase::EGP_3DGame);
-
-	// 仮繋ぎ: Wakeムービー実装時にカットシーン経由へ差し替え
-	if (AMyPlayerController* PC = GetMyPlayerController())
+	else
 	{
-		PC->SetViewTarget(PC->GetPawn());
+		ShowFailWidget();
 	}
-	// ----------------------------------------------------------
 }
 
 void APlayerGameMode::ShowResultWidget()
@@ -222,6 +231,20 @@ void APlayerGameMode::ShowResultWidget()
 		if (PlayerController)
 		{
 			PlayerController->OpenMenuWidget(ResultWidgetClass);
+		}
+	}
+}
+
+void APlayerGameMode::ShowFailWidget()
+{
+	SetPhase(EGamePhase::EGP_Result);
+
+	if (FailWidgetClass)
+	{
+		AMyPlayerController* PlayerController = GetMyPlayerController();
+		if (PlayerController)
+		{
+			PlayerController->OpenMenuWidget(FailWidgetClass);
 		}
 	}
 }

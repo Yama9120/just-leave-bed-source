@@ -29,6 +29,7 @@ class JUST_LEAVE_BED_API APlayerGameMode : public AGameModeBase
 
 public:
 	void ShowResultWidget();
+	void ShowFailWidget();
 	void SetPhaseWidgetInteraction(bool bEnabled);
 	void SkipCurrentCutscene();
 	void SetPhase(EGamePhase NewPhase);
@@ -76,7 +77,7 @@ protected:
 	TObjectPtr<ULevelSequence> IntroCutscene;
 
 private:
-	void HandleDreamGameCompleted();
+	void HandleDreamGameFinished(bool bSuccess);
 	AMyPlayerController* GetMyPlayerController() const;
 
 	UFUNCTION()

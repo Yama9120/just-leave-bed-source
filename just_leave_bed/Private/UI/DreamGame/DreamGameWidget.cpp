@@ -30,13 +30,13 @@ void UDreamGameWidget::FocusCompletedButton()
 void UDreamGameWidget::OnButtonCompleted(UMenuButton* Button)
 {
 	// クリアボタンが押されたあとに、ゲームのクリアを通知する
-	NotifyCompleted();
+	NotifyFinished(true);
 }
 
-void UDreamGameWidget::NotifyCompleted()
+void UDreamGameWidget::NotifyFinished(bool bSuccess)
 {
-	// 2Dゲームフェーズの終了を通知する。個々のミニゲームのクリアでは呼ばない
-	OnDreamGameCompleted.Broadcast();
+	// 2Dゲームフェーズ全体の結果(成否)を3D側へ通知する
+	OnDreamGameFinished.Broadcast(bSuccess);
 }
 
 // ミニゲームを開始する関数
@@ -83,5 +83,5 @@ void UDreamGameWidget::HandleMinigameFinished(bool bSuccess)
 {
 	// 各ミニゲームの終了通知を受け取ったときの処理
 	// TODO: 複数ミニゲーム対応時に規定数クリア判定へ差し替え(現状は1本の終了=フェーズ終了として直結)
-	NotifyCompleted();
+	NotifyFinished(bSuccess);
 }

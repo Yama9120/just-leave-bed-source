@@ -10,13 +10,13 @@
 class UMenuButton;
 class UOverlay;
 
-// マルチキャストデリゲートの宣言（引数なし）
-DECLARE_MULTICAST_DELEGATE(FOnDreamGameCompleted);
+// マルチキャストデリゲートの宣言（引数なし→クリアはtrue、失敗はfalseを返すようにするために引数ありへ）
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnDreamGameFinished, bool)
 
-/**
- *
- */
-UCLASS(Abstract)
+	/**
+	 *
+	 */
+	UCLASS(Abstract)
 class JUST_LEAVE_BED_API UDreamGameWidget : public UUserWidget
 {
 	GENERATED_BODY()
@@ -29,11 +29,12 @@ public:
 	UFUNCTION()
 	virtual void OnButtonCompleted(UMenuButton* Button);
 
-	// クリアしたことを通知する関数
+	// 2Dゲームフェーズ全体の結果(成否)を3D側へ通知する。
+	// フェーズが終了したかどうかの判断は呼び出し側(HandleMinigameFinished等)が行い、ここでは判断しない
 	UFUNCTION(BlueprintCallable, Category = "DreamGame")
-	void NotifyCompleted();
+	void NotifyFinished(bool bSuccess);
 
-	FOnDreamGameCompleted OnDreamGameCompleted;
+	FOnDreamGameFinished OnDreamGameFinished;
 
 protected:
 	UPROPERTY(meta = (BindWidgetOptional))
