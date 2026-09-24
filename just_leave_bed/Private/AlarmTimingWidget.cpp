@@ -70,6 +70,7 @@ void UAlarmTimingWidget::StartMinigame_Implementation()
 	}
 
 	UpdateJudgeWindowUI();
+	UpdateScoreGaugeUI();
 }
 
 void UAlarmTimingWidget::OnStopButtonClicked(UMenuButton* Button)
@@ -109,6 +110,9 @@ void UAlarmTimingWidget::TryStopAlarm()
 	// スコアをFailScoreとClearScoreの範囲内に制限
 	Score = FMath::Clamp(Score, FailScore, ClearScore);
 
+	// スコアゲージの表示を更新
+	UpdateScoreGaugeUI();
+
 	// スコアに応じてゲームの結果を判定
 	if (Score >= ClearScore)
 	{
@@ -138,6 +142,19 @@ void UAlarmTimingWidget::UpdateJudgeWindowUI()
 		CanvasSlot->SetAnchors(FAnchors(JudgeWindowCenter - JudgeWindowHalfWidth, 0, JudgeWindowCenter + JudgeWindowHalfWidth, 1));
 		CanvasSlot->SetOffsets(FMargin(0));
 	}
+}
+
+void UAlarmTimingWidget::UpdateScoreGaugeUI()
+{
+	if (!ScoreGauge)
+	{
+		return;
+	}
+
+	// スコアゲージの表示を更新
+	float ScorePercent = static_cast<float>(Score - FailScore) / static_cast<float>(ClearScore - FailScore);
+
+	ScoreGauge->SetPercent(ScorePercent);
 }
 
 float UAlarmTimingWidget::GetCurrentSpeed() const

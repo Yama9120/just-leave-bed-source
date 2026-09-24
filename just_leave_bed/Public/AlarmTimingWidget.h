@@ -30,6 +30,7 @@ private:
 	void OnClearButtonClicked(UMenuButton* Button);
 	void TryStopAlarm();
 	void UpdateJudgeWindowUI();
+	void UpdateScoreGaugeUI();
 	float GetCurrentSpeed() const;
 
 	// ゲージの現在位置（0.0～1.0）
@@ -58,6 +59,8 @@ private:
 	// ゲージと判定窓のUI
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UProgressBar> TimingGauge;
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<UProgressBar> ScoreGauge;
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UImage> JudgeWindowImage;
 
