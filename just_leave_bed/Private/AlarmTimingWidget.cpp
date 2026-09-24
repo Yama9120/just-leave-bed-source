@@ -30,8 +30,11 @@ void UAlarmTimingWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTi
 		return;
 	}
 
+	// スコアに応じたゲージの速度を取得
+	const float Speed = GetCurrentSpeed();
+
 	// ゲージの速度に応じて位置を更新
-	GaugeValue += GaugeDirection * GaugeSpeed * InDeltaTime;
+	GaugeValue += GaugeDirection * Speed * InDeltaTime;
 
 	// ゲージが端に到達したら方向を反転
 	if (GaugeValue >= 1.0f)
@@ -134,5 +137,17 @@ void UAlarmTimingWidget::UpdateJudgeWindowUI()
 	{
 		CanvasSlot->SetAnchors(FAnchors(JudgeWindowCenter - JudgeWindowHalfWidth, 0, JudgeWindowCenter + JudgeWindowHalfWidth, 1));
 		CanvasSlot->SetOffsets(FMargin(0));
+	}
+}
+
+float UAlarmTimingWidget::GetCurrentSpeed() const
+{
+	if (Score <= 0)
+	{
+		return GaugeSpeed;
+	}
+	else
+	{
+		return GaugeSpeed * FMath::Pow(GaugeSpeedRate, Score);
 	}
 }

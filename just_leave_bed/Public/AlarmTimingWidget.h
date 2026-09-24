@@ -30,6 +30,7 @@ private:
 	void OnClearButtonClicked(UMenuButton* Button);
 	void TryStopAlarm();
 	void UpdateJudgeWindowUI();
+	float GetCurrentSpeed() const;
 
 	// ゲージの現在位置（0.0～1.0）
 	float GaugeValue = 0.0f;
@@ -38,6 +39,9 @@ private:
 	// ゲージの移動速度(毎秒の増加分)。1.0で片道1秒
 	UPROPERTY(EditDefaultsOnly, Category = "AlarmTiming", meta = (ClampMin = "0.0"))
 	float GaugeSpeed = 1.0f;
+	// ゲージの速度倍率。成功数に応じてゲージの速度を変化させるための倍率
+	UPROPERTY(EditDefaultsOnly, Category = "AlarmTiming", meta = (ClampMin = "1.0"))
+	float GaugeSpeedRate = 1.2f;
 	// 判定窓の中心位置（0.0～1.0）
 	UPROPERTY(EditDefaultsOnly, Category = "AlarmTiming", meta = (ClampMin = "0.0"))
 	float JudgeWindowCenter = 0.5f;
