@@ -2,6 +2,7 @@
 
 #include "Items/Door.h"
 #include "Curves/CurveFloat.h"
+#include "TimerManager.h"
 
 ADoor::ADoor()
 {
@@ -35,6 +36,9 @@ void ADoor::OnPlayerOverlap(APlayerCharacter* Player)
 {
 	// ドアを開く
 	DoorTimelineComp->Play();
+
+	// ドアを閉じるタイマーを設定
+	GetWorldTimerManager().SetTimer(DoorCloseTimerHandle, this, &ADoor::CloseDoor, DoorCloseDuration, false);
 }
 
 void ADoor::UpdateTimelineComp(float Output)
@@ -42,4 +46,10 @@ void ADoor::UpdateTimelineComp(float Output)
 	// ドアの回転を更新
 	FRotator DoorNewRotation = FRotator(0.0f, Output, 0.f);
 	DoorHinge->SetRelativeRotation(DoorNewRotation);
+}
+
+void ADoor::CloseDoor()
+{
+	// ドアを閉じる
+	DoorTimelineComp->Reverse();
 }

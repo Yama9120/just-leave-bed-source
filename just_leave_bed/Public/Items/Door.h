@@ -40,6 +40,11 @@ protected:
 private:
 	UFUNCTION()
 	void UpdateTimelineComp(float Output);
+	void CloseDoor();
 
 	FOnTimelineFloat UpdateFunctionFloat;
+
+	UPROPERTY(EditAnywhere)
+	float DoorCloseDuration = 4.0f;
+	FTimerHandle DoorCloseTimerHandle;
 };
