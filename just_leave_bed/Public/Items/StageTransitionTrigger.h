@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Items/BaseItem.h"
+#include "Items/PlayerTrigger.h"
 #include "StageTransitionTrigger.generated.h"
 
 /**
  *
  */
 UCLASS()
-class JUST_LEAVE_BED_API AStageTransitionTrigger : public ABaseItem
+class JUST_LEAVE_BED_API AStageTransitionTrigger : public APlayerTrigger
 {
 	GENERATED_BODY()
 
@@ -21,5 +21,5 @@ public:
 	bool bIsPreload = true;
 
 protected:
-	virtual void OnPlayerOverlap(APlayerCharacter* Player);
+	virtual void OnPlayerEnter(APlayerCharacter* Player) override;
 };

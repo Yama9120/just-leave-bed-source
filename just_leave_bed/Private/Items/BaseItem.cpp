@@ -2,43 +2,20 @@
 
 #include "Items/BaseItem.h"
 #include "Components/BoxComponent.h"
-#include "Characters/PlayerCharacter.h"
 
 ABaseItem::ABaseItem()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
+	// ItemMesh をルートにし、Box をその子に付け替える
 	ItemMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ItemMesh"));
-	RootComponent = ItemMesh;
-
-	Box = CreateDefaultSubobject<UBoxComponent>(TEXT("Box"));
-	Box->SetupAttachment(GetRootComponent());
-}
-
-void ABaseItem::BeginPlay()
-{
-	Super::BeginPlay();
-
-	Box->OnComponentBeginOverlap.AddDynamic(this, &ABaseItem::OnBoxOverlap);
+	SetRootComponent(ItemMesh);
+	Box->SetupAttachment(ItemMesh);
 }
 
 float ABaseItem::TransformedSin()
 {
 	return Amplitude * FMath::Sin(RunningTime * TimeConstant);
-}
-
-void ABaseItem::OnBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-{
-	// 重なったアクターがプレイヤーキャラクターかどうかを確認
-	APlayerCharacter* Player = Cast<APlayerCharacter>(OtherActor);
-	if (Player)
-	{
-		OnPlayerOverlap(Player);
-	}
-}
-
-void ABaseItem::OnPlayerOverlap(APlayerCharacter* Player)
-{
 }
 
 void ABaseItem::Tick(float DeltaTime)

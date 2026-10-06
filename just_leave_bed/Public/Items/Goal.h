@@ -3,17 +3,17 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Items/BaseItem.h"
+#include "Items/PlayerTrigger.h"
 #include "Goal.generated.h"
 
 /**
  *
  */
 UCLASS()
-class JUST_LEAVE_BED_API AGoal : public ABaseItem
+class JUST_LEAVE_BED_API AGoal : public APlayerTrigger
 {
 	GENERATED_BODY()
 
 protected:
-	virtual void OnPlayerOverlap(APlayerCharacter* Player);
+	virtual void OnPlayerEnter(APlayerCharacter* Player) override;
 };

@@ -4,7 +4,7 @@
 #include "GameMode/PlayerGameMode.h"
 #include "Kismet/GameplayStatics.h"
 
-void AGoal::OnPlayerOverlap(APlayerCharacter* Player)
+void AGoal::OnPlayerEnter(APlayerCharacter* Player)
 {
 	// ゴールに到達した場合の処理
 	APlayerGameMode* GameMode = Cast<APlayerGameMode>(UGameplayStatics::GetGameMode(GetWorld()));

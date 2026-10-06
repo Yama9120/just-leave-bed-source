@@ -1,20 +1,20 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Items/Door.h"
+#include "Components/BoxComponent.h"
 #include "Curves/CurveFloat.h"
 #include "TimerManager.h"
 
 ADoor::ADoor()
 {
-	bEnableFloating = false;
-
 	DoorFrame = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("DoorFrameMesh"));
 	DoorHinge = CreateDefaultSubobject<USceneComponent>(TEXT("DoorHingeMesh"));
 	DoorPanel = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("DoorPanelMesh"));
 	DoorTimelineComp = CreateDefaultSubobject<UTimelineComponent>(TEXT("DoorTimelineComp"));
 
-	// コンポーネントの階層を設定
-	DoorFrame->SetupAttachment(RootComponent);
+	// コンポーネントの階層を設定。DoorFrame をルートにし、Box をその子に付け替える
+	SetRootComponent(DoorFrame);
+	Box->SetupAttachment(DoorFrame);
 	DoorHinge->SetupAttachment(DoorFrame);
 	DoorPanel->SetupAttachment(DoorHinge);
 }
@@ -32,7 +32,7 @@ void ADoor::BeginPlay()
 	}
 }
 
-void ADoor::OnPlayerOverlap(APlayerCharacter* Player)
+void ADoor::OnPlayerEnter(APlayerCharacter* Player)
 {
 	// ドアを開く
 	DoorTimelineComp->Play();

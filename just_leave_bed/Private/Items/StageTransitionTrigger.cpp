@@ -3,7 +3,7 @@
 #include "Items/StageTransitionTrigger.h"
 #include "System/StageStreamingSubsystem.h"
 
-void AStageTransitionTrigger::OnPlayerOverlap(APlayerCharacter* Player)
+void AStageTransitionTrigger::OnPlayerEnter(APlayerCharacter* Player)
 {
 	// 特定の位置（ロード/アンロード地点）に来た場合の処理
 	UStageStreamingSubsystem* StageStreamingSubsystem = GetGameInstance()->GetSubsystem<UStageStreamingSubsystem>();

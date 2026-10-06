@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Items/BaseItem.h"
+#include "Items/PlayerTrigger.h"
 #include "Components/TimelineComponent.h"
 #include "Door.generated.h"
 
@@ -13,7 +13,7 @@ class UCurveFloat;
  *
  */
 UCLASS()
-class JUST_LEAVE_BED_API ADoor : public ABaseItem
+class JUST_LEAVE_BED_API ADoor : public APlayerTrigger
 {
 	GENERATED_BODY()
 
@@ -25,7 +25,7 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-	virtual void OnPlayerOverlap(APlayerCharacter* Player) override;
+	virtual void OnPlayerEnter(APlayerCharacter* Player) override;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	UStaticMeshComponent* DoorFrame;
