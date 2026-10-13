@@ -22,6 +22,9 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	UFUNCTION()
+	void OnStop(const FHitResult& HitResult);
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<UStaticMeshComponent> Object;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)

@@ -32,4 +32,12 @@ void AMovingObject::BeginPlay()
 
 	// 指定された秒数後にオブジェクトを破棄する
 	SetLifeSpan(Lifespan);
+
+	// OnProjectileStopが呼ばれたときにOnStop関数を呼ぶように設定
+	Movement->OnProjectileStop.AddDynamic(this, &AMovingObject::OnStop);
+}
+
+void AMovingObject::OnStop(const FHitResult& HitResult)
+{
+	Destroy();
 }
