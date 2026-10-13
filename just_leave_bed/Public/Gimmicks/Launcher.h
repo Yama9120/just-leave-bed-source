@@ -6,6 +6,8 @@
 #include "Gimmicks/Gimmick.h"
 #include "Launcher.generated.h"
 
+class ALaunchPoint;
+
 /**
  *
  */
@@ -16,4 +18,7 @@ class JUST_LEAVE_BED_API ALauncher : public AGimmick
 
 protected:
 	virtual void Start_Implementation() override;
+
+	UPROPERTY(EditInstanceOnly)
+	TArray<TObjectPtr<ALaunchPoint>> LaunchPoints;
 };
