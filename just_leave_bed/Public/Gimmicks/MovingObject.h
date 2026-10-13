@@ -29,6 +29,6 @@ protected:
 	TObjectPtr<UStaticMeshComponent> Object;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<UProjectileMovementComponent> Movement;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Projectile")
-	float Lifespan = 5.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Projectile", meta = (Units = "s"))
+	float Lifespan = 5.0f; // 0.0f なら時間では消えない
 };

@@ -28,16 +28,19 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<UArrowComponent> Muzzle;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (ClampMin = 0.0f))
-	float Delay = 0.0f; // 発射までの遅延時間
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (ClampMin = 0.0f))
-	float Interval = 0.0f; // 発射間隔
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (ClampMin = 0))
-	int32 Count = 0; // 発射回数
+	// 発射までの遅延時間
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (ClampMin = "0.0", Units = "s"))
+	float Delay = 0.0f;
+	// 発射間隔
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (ClampMin = "0.0", Units = "s"))
+	float Interval = 0.0f;
+	// 発射回数
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (ClampMin = "0", EditCondition = "Interval > 0"))
+	int32 Count = 0;
 
 private:
 	void OnTimer();
 
 	FTimerHandle Timer;
-	int32 FireCount;
+	int32 FireCount = 0;
 };
