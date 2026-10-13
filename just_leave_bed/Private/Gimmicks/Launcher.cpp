@@ -21,6 +21,6 @@ void ALauncher::Start_Implementation()
 		}
 
 		// 有効なLaunchPointがあればFire()を呼び出して発射する
-		LaunchPoints[i]->Fire();
+		LaunchPoints[i]->Launch();
 	}
 }

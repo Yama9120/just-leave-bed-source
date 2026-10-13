@@ -19,10 +19,25 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void Fire();
+	UFUNCTION(BlueprintCallable)
+	void Launch();
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TSubclassOf<AMovingObject> ObjectClass;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<UArrowComponent> Muzzle;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (ClampMin = 0.0f))
+	float Delay = 0.0f; // 発射までの遅延時間
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (ClampMin = 0.0f))
+	float Interval = 0.0f; // 発射間隔
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (ClampMin = 0))
+	int32 Count = 0; // 発射回数
+
+private:
+	void OnTimer();
+
+	FTimerHandle Timer;
+	int32 FireCount;
 };
