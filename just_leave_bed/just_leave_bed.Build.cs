@@ -8,7 +8,7 @@ public class just_leave_bed : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "UMG", "LevelSequence", "MovieScene", "CinematicCamera" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "UMG", "LevelSequence", "MovieScene", "CinematicCamera", "GameplayTags" });
 
 
         PrivateDependencyModuleNames.AddRange(new string[] {  });
