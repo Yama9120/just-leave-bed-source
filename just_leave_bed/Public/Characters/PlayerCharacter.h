@@ -13,6 +13,7 @@ class UInputAction;
 class USpringArmComponent;
 class UCameraComponent;
 class UAnimMontage;
+class UResultReceiver;
 
 UENUM(BlueprintType)
 enum class ERotationMode : uint8
@@ -35,6 +36,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Character")
 	void SetRotationMode(ERotationMode NewRotationMode);
+
+	UResultReceiver* GetResultReceiver() const { return ResultReceiver; }
 
 protected:
 	virtual void BeginPlay() override;
@@ -75,6 +78,10 @@ protected:
 	float MaxMeshStepOffset = 50.f;
 	UPROPERTY(EditAnywhere, Category = "StepSmooth")
 	float MaxSmoothVerticalSpeed = 350.f;
+
+	// ギミックの結果を受け取り、演出の再生と通知を行う部品
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Effects")
+	TObjectPtr<UResultReceiver> ResultReceiver;
 
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);

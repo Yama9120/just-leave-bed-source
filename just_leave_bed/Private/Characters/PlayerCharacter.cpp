@@ -5,6 +5,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Animation/AnimInstance.h"
+#include "Characters/ResultReceiver.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 APlayerCharacter::APlayerCharacter()
@@ -43,6 +44,9 @@ APlayerCharacter::APlayerCharacter()
 	// 子のメッシュを作成して、親のアニメーションを引き継ぐように設定
 	VisualMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("VisualMesh"));
 	VisualMesh->SetupAttachment(GetMesh());
+
+	// ギミックの結果を受け取り、演出の再生と通知を行う部品を作成
+	ResultReceiver = CreateDefaultSubobject<UResultReceiver>(TEXT("ResultReceiver"));
 }
 
 void APlayerCharacter::BeginPlay()
