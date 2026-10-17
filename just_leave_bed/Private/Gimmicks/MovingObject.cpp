@@ -3,6 +3,10 @@
 #include "Gimmicks/MovingObject.h"
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
+#include "Gimmicks/ResultTags.h"
+#include "Characters/PlayerCharacter.h"
+#include "Characters/ResultReceiver.h"
+#include "Kismet/GameplayStatics.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 
 AMovingObject::AMovingObject()
@@ -37,7 +41,46 @@ void AMovingObject::BeginPlay()
 	Movement->OnProjectileStop.AddDynamic(this, &AMovingObject::OnStop);
 }
 
+void AMovingObject::OnPlayerEnter(APlayerCharacter* Player)
+{
+	Super::OnPlayerEnter(Player);
+
+	// プレイヤーにあたっても、物体は消えないようにするため、通知だけ行う
+	Notify(ResultTags::FailHit);
+}
+
 void AMovingObject::OnStop(const FHitResult& HitResult)
 {
 	Destroy();
+}
+
+void AMovingObject::Notify(FGameplayTag Tag)
+{
+	// すでに通知済みの場合は何もしない
+	if (bNotified)
+	{
+		return;
+	}
+
+	// 受け取り側に関係なく、この物体は通知済みとして確定する
+	bNotified = true;
+
+	// プレイヤーキャラクターを取得
+	APlayerCharacter* Player = Cast<APlayerCharacter>(UGameplayStatics::GetPlayerPawn(this, 0));
+
+	if (Player)
+	{
+		// 受け取り側のResultReceiverを取得
+		UResultReceiver* Receiver = Player->GetResultReceiver();
+
+		if (Receiver)
+		{
+			// ResultReceiverに通知する
+			Receiver->Receive(Tag, GetActorLocation());
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("MovingObject: ResultReceiver is not set on %s."), *GetNameSafe(Player));
+		}
+	}
 }
