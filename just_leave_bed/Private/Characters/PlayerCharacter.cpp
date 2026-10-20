@@ -6,6 +6,7 @@
 #include "Camera/CameraComponent.h"
 #include "Animation/AnimInstance.h"
 #include "Characters/ResultReceiver.h"
+#include "System/RetrySubsystem.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 APlayerCharacter::APlayerCharacter()
@@ -56,6 +57,26 @@ void APlayerCharacter::BeginPlay()
 	SetRotationMode(RotationMode);
 
 	PreviousActorZ = GetActorLocation().Z;
+
+	// ResultReceiverのOnResultに、RetrySubsystemをバインドする
+	BindRetrySubsystem();
+}
+
+void APlayerCharacter::BindRetrySubsystem()
+{
+	URetrySubsystem* RetrySubsystem = GetWorld()->GetSubsystem<URetrySubsystem>();
+
+	if (!RetrySubsystem)
+	{
+		return;
+	}
+	if (!ResultReceiver)
+	{
+		return;
+	}
+
+	// ResultReceiverのOnResultに、RetrySubsystemのHandleResultをバインドする
+	ResultReceiver->OnResult.AddDynamic(RetrySubsystem, &URetrySubsystem::HandleResult);
 }
 
 void APlayerCharacter::Move(const FInputActionValue& Value)

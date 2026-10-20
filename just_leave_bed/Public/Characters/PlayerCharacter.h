@@ -98,6 +98,7 @@ protected:
 
 private:
 	void UpdateMeshStepSmoothing(float DeltaTime);
+	void BindRetrySubsystem();
 
 	UPROPERTY(VisibleAnywhere, Category = "Camera")
 	USpringArmComponent* SpringArm;
