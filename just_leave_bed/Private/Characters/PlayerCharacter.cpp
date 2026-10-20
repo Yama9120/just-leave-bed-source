@@ -352,3 +352,14 @@ void APlayerCharacter::SetRotationMode(ERotationMode NewRotationMode)
 	// キャラクターの回転モードを設定する（OrientならTrueに）
 	GetCharacterMovement()->bOrientRotationToMovement = (RotationMode == ERotationMode::Orient);
 }
+
+// テレポート直後に呼ぶ
+void APlayerCharacter::ResetSmoothingState()
+{
+	// メッシュのずらし量を打ち消してから記録をゼロにする（変数だけ戻すと、メッシュがずれたまま残るため）
+	GetMesh()->AddRelativeLocation(FVector(0.f, 0.f, -MeshStepZOffset));
+	MeshStepZOffset = 0.f;
+
+	// 前フレームとの差を段差として補間しないように、基準のZを現在の位置に合わせる
+	PreviousActorZ = GetActorLocation().Z;
+}

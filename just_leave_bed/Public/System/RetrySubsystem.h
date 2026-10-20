@@ -18,8 +18,12 @@ class JUST_LEAVE_BED_API URetrySubsystem : public UWorldSubsystem
 public:
 	UFUNCTION()
 	void HandleResult(FGameplayTag ResultTag);
+	void RegisterCheckpoint(const FTransform& Transform);
 
 private:
 	void StartMissSequence();
+	void RespawnPlayer();
+
 	bool bMissInProgress = false;
+	FTransform RespawnTransform;
 };

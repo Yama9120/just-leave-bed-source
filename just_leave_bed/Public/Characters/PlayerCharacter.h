@@ -37,6 +37,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Character")
 	void SetRotationMode(ERotationMode NewRotationMode);
 
+	void ResetSmoothingState();
+
 	UResultReceiver* GetResultReceiver() const { return ResultReceiver; }
 
 protected:
