@@ -8,6 +8,7 @@
 #include "Characters/ResultReceiver.h"
 #include "System/RetrySubsystem.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "NiagaraFunctionLibrary.h"
 
 APlayerCharacter::APlayerCharacter()
 {
@@ -77,6 +78,23 @@ void APlayerCharacter::BindRetrySubsystem()
 
 	// ResultReceiverのOnResultに、RetrySubsystemのHandleResultをバインドする
 	ResultReceiver->OnResult.AddDynamic(RetrySubsystem, &URetrySubsystem::HandleResult);
+}
+
+void APlayerCharacter::SetCharacterVisible(bool bVisible)
+{
+	// キャラクターにアタッチされているすべてのアクターを取得
+	TArray<AActor*> AttachedActors;
+	GetAttachedActors(AttachedActors, true, true);
+
+	// キャラクターとアタッチされているすべてのアクターを非表示に
+	SetActorHiddenInGame(!bVisible);
+	for (AActor* Attached : AttachedActors)
+	{
+		if (Attached)
+		{
+			Attached->SetActorHiddenInGame(!bVisible);
+		}
+	}
 }
 
 void APlayerCharacter::Move(const FInputActionValue& Value)
@@ -362,4 +380,24 @@ void APlayerCharacter::ResetSmoothingState()
 
 	// 前フレームとの差を段差として補間しないように、基準のZを現在の位置に合わせる
 	PreviousActorZ = GetActorLocation().Z;
+}
+
+void APlayerCharacter::PlayVanishEffect()
+{
+	if (VanishEffect)
+	{
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), VanishEffect, GetActorLocation(), GetActorRotation());
+	}
+
+	SetCharacterVisible(false);
+}
+
+void APlayerCharacter::PlayAppearEffect()
+{
+	if (AppearEffect)
+	{
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), AppearEffect, GetActorLocation(), GetActorRotation());
+	}
+
+	SetCharacterVisible(true);
 }

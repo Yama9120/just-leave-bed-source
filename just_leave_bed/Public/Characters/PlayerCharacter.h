@@ -14,6 +14,7 @@ class USpringArmComponent;
 class UCameraComponent;
 class UAnimMontage;
 class UResultReceiver;
+class UNiagaraSystem;
 
 UENUM(BlueprintType)
 enum class ERotationMode : uint8
@@ -39,7 +40,10 @@ public:
 
 	void ResetSmoothingState();
 
+	// エフェクトに関する関数
 	UResultReceiver* GetResultReceiver() const { return ResultReceiver; }
+	void PlayVanishEffect(); // ミス時にキャラを消す（エフェクトは設定されているときだけ出す）
+	void PlayAppearEffect(); // ミスからの復帰時にキャラを表示に戻す（エフェクトは設定されているときだけ出す）
 
 protected:
 	virtual void BeginPlay() override;
@@ -84,6 +88,10 @@ protected:
 	// ギミックの結果を受け取り、演出の再生と通知を行う部品
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Effects")
 	TObjectPtr<UResultReceiver> ResultReceiver;
+	UPROPERTY(EditDefaultsOnly, Category = "Effects")
+	TObjectPtr<UNiagaraSystem> VanishEffect;
+	UPROPERTY(EditDefaultsOnly, Category = "Effects")
+	TObjectPtr<UNiagaraSystem> AppearEffect;
 
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
@@ -101,6 +109,7 @@ protected:
 private:
 	void UpdateMeshStepSmoothing(float DeltaTime);
 	void BindRetrySubsystem();
+	void SetCharacterVisible(bool bVisible);
 
 	UPROPERTY(VisibleAnywhere, Category = "Camera")
 	USpringArmComponent* SpringArm;
