@@ -7,6 +7,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "TimerManager.h"
 #include "GameFramework/PlayerController.h"
+#include "System/RunTracker.h"
 
 void URetrySubsystem::HandleResult(FGameplayTag ResultTag)
 {
@@ -42,6 +43,10 @@ void URetrySubsystem::StartMissSequence()
 	bMissInProgress = true;
 	UE_LOG(LogTemp, Log, TEXT("RetrySubsystem: Miss sequence started."));
 
+	// ライフを減らす
+	CurrentLives--;
+	UE_LOG(LogTemp, Log, TEXT("RetrySubsystem: Lives remaining: %d / %d."), CurrentLives, MaxLives);
+
 	// 入力はPawnだけ止める（コントローラー側のポーズ操作は効いたままにするため）
 	APlayerController* PlayerController = FindPlayerController();
 	if (PlayerController)
@@ -64,11 +69,32 @@ void URetrySubsystem::BeginVanishSequence()
 	// プレイヤーキャラクターの消える演出を開始
 	Player->PlayVanishEffect();
 
-	// チェックポイントにテレポートさせる
-	RespawnPlayer();
+	// 残機が残っていれば復帰し、なければゲームオーバーを通知する
+	if (CurrentLives > 0)
+	{
+		URunTracker* RunTracker = GetWorld()->GetGameInstance()->GetSubsystem<URunTracker>();
+		if (RunTracker)
+		{
+			// 復帰するときだけリトライ回数を加算する（残機0からのリスタートはFailWidget側で加算するため）
+			RunTracker->AddRetry();
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("RetrySubsystem: RunTracker not found. Retry count not updated."));
+		}
 
-	// VanishDuration後に現れる段階へ進む（消えている間にカメララグでカメラが移動する）
-	GetWorld()->GetTimerManager().SetTimer(MissTimerHandle, this, &URetrySubsystem::BeginAppearSequence, VanishDuration, false);
+		// チェックポイントにテレポートさせる
+		RespawnPlayer();
+
+		// VanishDuration後に現れる段階へ進む（消えている間にカメララグでカメラが移動する）
+		GetWorld()->GetTimerManager().SetTimer(MissTimerHandle, this, &URetrySubsystem::BeginAppearSequence, VanishDuration, false);
+	}
+	else
+	{
+		// ゲームオーバー中はフラグも入力も戻さない（失敗画面の裏で次のミスを受け付けないため）
+		UE_LOG(LogTemp, Log, TEXT("RetrySubsystem: Game over."));
+		OnGameOver.Broadcast();
+	}
 }
 
 void URetrySubsystem::BeginAppearSequence()

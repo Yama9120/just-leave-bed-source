@@ -10,6 +10,8 @@
 class APlayerCharacter;
 class APlayerController;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGameOver);
+
 /**
  *
  */
@@ -22,6 +24,9 @@ public:
 	UFUNCTION()
 	void HandleResult(FGameplayTag ResultTag);
 	void RegisterCheckpoint(const FTransform& Transform);
+
+	UPROPERTY(BlueprintAssignable)
+	FOnGameOver OnGameOver;
 
 private:
 	void StartMissSequence();
@@ -39,4 +44,7 @@ private:
 	float VanishDuration = 0.3f; // 消えてから現れるまでの時間（秒）
 	float AppearDuration = 0.3f; // 現れてから操作を戻すまでの（秒）
 	FTimerHandle MissTimerHandle;
+
+	int32 MaxLives = 5;            // 最大ライフ数
+	int32 CurrentLives = MaxLives; // 現在のライフ数
 };

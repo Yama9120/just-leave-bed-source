@@ -12,6 +12,7 @@
 #include "EngineUtils.h"
 #include "Cutscene/CutsceneManager.h"
 #include "System/RunTracker.h"
+#include "System/RetrySubsystem.h"
 
 APlayerGameMode::APlayerGameMode()
 {
@@ -39,6 +40,9 @@ void APlayerGameMode::BeginPlay()
 	{
 		CutsceneManager->OnCutsceneFinished.AddDynamic(this, &APlayerGameMode::HandleIntroCutsceneFinished);
 	}
+
+	// RetrySubsystemのバインドを行う
+	BindRetrySubsystem();
 }
 
 void APlayerGameMode::Tick(float DeltaSeconds)
@@ -281,4 +285,23 @@ AMyPlayerController* APlayerGameMode::GetMyPlayerController() const
 void APlayerGameMode::HandleIntroCutsceneFinished()
 {
 	EnterDreamGame();
+}
+
+void APlayerGameMode::BindRetrySubsystem()
+{
+	URetrySubsystem* RetrySubsystem = GetWorld()->GetSubsystem<URetrySubsystem>();
+	if (!RetrySubsystem)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("PlayerGameMode: RetrySubsystem not found. Game over screen will not be shown."));
+		return;
+	}
+
+	// RetrySubsystemのOnGameOverイベントにHandleGameOver関数をバインドする（ゲームオーバー時にHandleGameOverが呼ばれるようになる）
+	RetrySubsystem->OnGameOver.AddDynamic(this, &APlayerGameMode::HandleGameOver);
+}
+
+void APlayerGameMode::HandleGameOver()
+{
+	// ゲームオーバー時にFailWidgetを表示する
+	ShowFailWidget();
 }

@@ -83,6 +83,10 @@ private:
 	UFUNCTION()
 	void HandleIntroCutsceneFinished();
 
+	void BindRetrySubsystem();
+	UFUNCTION()
+	void HandleGameOver();
+
 	UPROPERTY()
 	TObjectPtr<UDreamGameWidget> ActiveDreamGameWidget;
 
