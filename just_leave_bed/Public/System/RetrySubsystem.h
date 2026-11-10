@@ -47,8 +47,9 @@ private:
 	bool bMissInProgress = false;
 	FTransform RespawnTransform;
 
+	float DeathDuration = 0.4f;  // 倒れ始めてから消えるまでの時間（秒）
 	float VanishDuration = 0.3f; // 消えてから現れるまでの時間（秒）
-	float AppearDuration = 0.3f; // 現れてから操作を戻すまでの（秒）
+	float AppearDuration = 0.3f; // 現れてから操作を戻すまでの時間（秒）
 	FTimerHandle MissTimerHandle;
 
 	int32 MaxLives = 5;            // 最大ライフ数

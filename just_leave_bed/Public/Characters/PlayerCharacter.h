@@ -45,6 +45,9 @@ public:
 	void PlayVanishEffect(); // ミス時にキャラを消す（エフェクトは設定されているときだけ出す）
 	void PlayAppearEffect(); // ミスからの復帰時にキャラを表示に戻す（エフェクトは設定されているときだけ出す）
 
+	void PlayDeathMontage();
+	void StopDeathMontage();
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -136,6 +139,8 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	UAnimMontage* DodgeMontage;
+	UPROPERTY(EditDefaultsOnly, Category = "Combat")
+	UAnimMontage* DeathMontage;
 
 	UPROPERTY(BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	EActionState ActionState = EActionState::EAS_Unoccupied;

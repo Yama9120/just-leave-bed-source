@@ -401,3 +401,22 @@ void APlayerCharacter::PlayAppearEffect()
 
 	SetCharacterVisible(true);
 }
+
+void APlayerCharacter::PlayDeathMontage()
+{
+	// 再生中のモンタージュがある場合は停止してから死亡アニメーションを再生する
+	GetCharacterMovement()->StopMovementImmediately();
+
+	if (DeathMontage)
+	{
+		PlayAnimMontage(DeathMontage);
+	}
+}
+
+void APlayerCharacter::StopDeathMontage()
+{
+	if (DeathMontage)
+	{
+		StopAnimMontage(DeathMontage);
+	}
+}

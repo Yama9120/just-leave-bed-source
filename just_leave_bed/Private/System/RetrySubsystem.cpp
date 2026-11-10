@@ -57,8 +57,11 @@ void URetrySubsystem::StartMissSequence()
 		Player->DisableInput(PlayerController);
 	}
 
-	// プレイヤーキャラクターの消える演出を開始
-	BeginVanishSequence();
+	// プレイヤーキャラクターの倒れるアニメーションを再生
+	Player->PlayDeathMontage();
+
+	// DeathDuration後にプレイヤーキャラクターの消える演出を開始
+	GetWorld()->GetTimerManager().SetTimer(MissTimerHandle, this, &URetrySubsystem::BeginVanishSequence, DeathDuration, false);
 }
 
 void URetrySubsystem::BeginVanishSequence()
@@ -69,12 +72,12 @@ void URetrySubsystem::BeginVanishSequence()
 		return;
 	}
 
-	// プレイヤーキャラクターの消える演出を開始
-	Player->PlayVanishEffect();
-
 	// 残機が残っていれば復帰し、なければゲームオーバーを通知する
 	if (CurrentLives > 0)
 	{
+		// プレイヤーキャラクターの消える演出を開始（ライフがなくなった場合にはキャラクターは消さずに最後までアニメーションを再生）
+		Player->PlayVanishEffect();
+
 		URunTracker* RunTracker = GetWorld()->GetGameInstance()->GetSubsystem<URunTracker>();
 		if (RunTracker)
 		{
@@ -143,17 +146,26 @@ void URetrySubsystem::RespawnPlayer()
 		return;
 	}
 
+	// プレイヤーの倒れるアニメーションを止める
+	Player->StopDeathMontage();
+
 	// しゃがんでいる場合は立ち上がる
 	if (Player->GetCharacterMovement()->IsCrouching())
 	{
 		Player->UnCrouch();
 	}
 
+	// ジャンプボタンを押している状態を解除する（空中でミスしたときに、復帰後もジャンプが続かないように）
+	Player->StopJumping();
+
 	// チェックポイントの位置と向きへテレポートさせる
 	Player->SetActorLocationAndRotation(RespawnTransform.GetLocation(), RespawnTransform.GetRotation(), false, nullptr, ETeleportType::TeleportPhysics);
 
 	// テレポート前の速度が残らないように止める
 	Player->GetCharacterMovement()->StopMovementImmediately();
+
+	// プレイヤーの移動モードを歩行に戻す（テレポート前に落下中だった場合、落下状態のままになってしまうため）
+	Player->GetCharacterMovement()->SetMovementMode(MOVE_Walking);
 
 	// カメラの向きもチェックポイントの向きに合わせる（キャラの向きとは別に管理されているため）
 	APlayerController* PlayerController = FindPlayerController();
