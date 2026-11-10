@@ -34,7 +34,12 @@ void ALaunchPoint::Fire()
 	ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
 	// スポーンするアクターを生成する
-	World->SpawnActor<AMovingObject>(ObjectClass, GetActorLocation(), GetActorRotation(), ActorSpawnParams);
+	AMovingObject* SpawnedObject = World->SpawnActor<AMovingObject>(ObjectClass, GetActorLocation(), GetActorRotation(), ActorSpawnParams);
+	if (SpawnedObject)
+	{
+		// 止めるときに消せるように、出した物体を覚えておく（寿命切れなどで自分から消えることもあるので弱参照）
+		SpawnedObjects.Add(SpawnedObject);
+	}
 }
 
 void ALaunchPoint::Launch()
@@ -55,6 +60,25 @@ void ALaunchPoint::Launch()
 		FireCount = 0;
 		GetWorldTimerManager().SetTimer(Timer, this, &ALaunchPoint::OnTimer, Interval, true, Delay);
 	}
+}
+
+void ALaunchPoint::StopLaunch()
+{
+	// 遅れ・間隔の発射を止める
+	GetWorldTimerManager().ClearTimer(Timer);
+
+	// 出した物体を消す（Destroyでは失敗の通知は出ない。寿命切れはLifeSpanExpiredで拾っているため）
+	for (const TWeakObjectPtr<AMovingObject>& Object : SpawnedObjects)
+	{
+		// すでに寿命で消えた物体は無効になっているので、残っているものだけ消す
+		if (Object.IsValid())
+		{
+			Object->Destroy();
+		}
+	}
+
+	// 配列を初期化する
+	SpawnedObjects.Empty();
 }
 
 void ALaunchPoint::OnTimer()

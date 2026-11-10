@@ -11,7 +11,7 @@ void ALauncher::Start_Implementation()
 		return;
 	}
 
-	// LaunchPoints配列をループして、各LaunchPointのFire()を呼び出す
+	// LaunchPoints配列をループして、各LaunchPointのLaunch()を呼び出す
 	for (int32 i = 0; i < LaunchPoints.Num(); ++i)
 	{
 		if (LaunchPoints[i] == nullptr)
@@ -20,7 +20,22 @@ void ALauncher::Start_Implementation()
 			continue;
 		}
 
-		// 有効なLaunchPointがあればFire()を呼び出して発射する
+		// 有効なLaunchPointがあればLaunch()を呼び出して発射する
 		LaunchPoints[i]->Launch();
+	}
+}
+
+void ALauncher::StopGimmick_Implementation()
+{
+	// 配下の発射地点をすべて止める（nullの警告はStart側で出しているので、ここでは黙ってスキップする）
+	for (int32 i = 0; i < LaunchPoints.Num(); ++i)
+	{
+		if (LaunchPoints[i] == nullptr)
+		{
+			continue;
+		}
+
+		// 有効なLaunchPointがあればStopLaunch()を呼び出して発射を停止する
+		LaunchPoints[i]->StopLaunch();
 	}
 }

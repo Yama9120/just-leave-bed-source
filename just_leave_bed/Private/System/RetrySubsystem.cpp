@@ -28,6 +28,9 @@ void URetrySubsystem::RegisterCheckpoint(const FTransform& Transform)
 	RespawnTransform = Transform;
 
 	UE_LOG(LogTemp, Log, TEXT("RetrySubsystem: Checkpoint registered at %s."), *Transform.GetLocation().ToString());
+
+	// チェックポイント到達時に通知する
+	OnCheckpointReached.Broadcast();
 }
 
 void URetrySubsystem::StartMissSequence()
@@ -82,6 +85,9 @@ void URetrySubsystem::BeginVanishSequence()
 		{
 			UE_LOG(LogTemp, Warning, TEXT("RetrySubsystem: RunTracker not found. Retry count not updated."));
 		}
+
+		// ミス時に通知する
+		OnRetryStarted.Broadcast();
 
 		// チェックポイントにテレポートさせる
 		RespawnPlayer();

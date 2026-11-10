@@ -11,6 +11,8 @@ class APlayerCharacter;
 class APlayerController;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGameOver);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCheckpointReached);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnRetryStarted);
 
 /**
  *
@@ -27,6 +29,10 @@ public:
 
 	UPROPERTY(BlueprintAssignable)
 	FOnGameOver OnGameOver;
+	UPROPERTY(BlueprintAssignable)
+	FOnCheckpointReached OnCheckpointReached;
+	UPROPERTY(BlueprintAssignable)
+	FOnRetryStarted OnRetryStarted;
 
 private:
 	void StartMissSequence();

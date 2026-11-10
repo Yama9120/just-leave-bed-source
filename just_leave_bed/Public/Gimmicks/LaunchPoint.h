@@ -21,6 +21,8 @@ public:
 	void Fire();
 	UFUNCTION(BlueprintCallable)
 	void Launch();
+	UFUNCTION(BlueprintCallable)
+	void StopLaunch();
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
@@ -40,6 +42,8 @@ protected:
 
 private:
 	void OnTimer();
+
+	TArray<TWeakObjectPtr<AMovingObject>> SpawnedObjects;
 
 	FTimerHandle Timer;
 	int32 FireCount = 0;
