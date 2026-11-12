@@ -15,6 +15,7 @@ class UCameraComponent;
 class UAnimMontage;
 class UResultReceiver;
 class UNiagaraSystem;
+class UEquipHolder;
 
 UENUM(BlueprintType)
 enum class ERotationMode : uint8
@@ -61,6 +62,8 @@ protected:
 	UInputAction* CrouchAction;
 	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputAction* DodgeAction;
+	UPROPERTY(EditAnywhere, Category = "Input")
+	UInputAction* EquipAction;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Character")
 	TObjectPtr<USkeletalMeshComponent> VisualMesh;
@@ -96,10 +99,13 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Effects")
 	TObjectPtr<UNiagaraSystem> AppearEffect;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Equip")
+	TObjectPtr<UEquipHolder> EquipHolder;
+
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
+	void Equip();
 	void Dodge();
-
 	bool CanDodge() const;
 	bool IsOccupied() const;
 	void OnDodgeMontageEnded(UAnimMontage* Montage, bool bInterrupted);

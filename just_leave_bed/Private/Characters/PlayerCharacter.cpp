@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Characters/PlayerCharacter.h"
+#include "Characters/EquipHolder.h"
 #include "EnhancedInputComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
@@ -49,6 +50,9 @@ APlayerCharacter::APlayerCharacter()
 
 	// ギミックの結果を受け取り、演出の再生と通知を行う部品を作成
 	ResultReceiver = CreateDefaultSubobject<UResultReceiver>(TEXT("ResultReceiver"));
+
+	// 装備処理を行う部品を作成
+	EquipHolder = CreateDefaultSubobject<UEquipHolder>(TEXT("EquipHolder"));
 }
 
 void APlayerCharacter::BeginPlay()
@@ -122,6 +126,11 @@ void APlayerCharacter::Look(const FInputActionValue& Value)
 
 	AddControllerPitchInput(LookAxisVector.Y);
 	AddControllerYawInput(LookAxisVector.X);
+}
+
+void APlayerCharacter::Equip()
+{
+	EquipHolder->TryEquip();
 }
 
 void APlayerCharacter::Dodge()
@@ -361,6 +370,7 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &APlayerCharacter::Jump);
 		EnhancedInputComponent->BindAction(CrouchAction, ETriggerEvent::Started, this, &APlayerCharacter::ToggleCrouch);
 		EnhancedInputComponent->BindAction(DodgeAction, ETriggerEvent::Started, this, &APlayerCharacter::Dodge);
+		EnhancedInputComponent->BindAction(EquipAction, ETriggerEvent::Started, this, &APlayerCharacter::Equip);
 	}
 }
 
