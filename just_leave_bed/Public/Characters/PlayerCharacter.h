@@ -41,6 +41,9 @@ public:
 
 	void ResetSmoothingState();
 
+	// 装備を付ける先（見た目の VRM の体）を返す
+	USkeletalMeshComponent* GetVisualMesh() const { return VisualMesh; }
+
 	// エフェクトに関する関数
 	UResultReceiver* GetResultReceiver() const { return ResultReceiver; }
 	void PlayVanishEffect(); // ミス時にキャラを消す（エフェクトは設定されているときだけ出す）

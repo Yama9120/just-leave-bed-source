@@ -3,6 +3,25 @@
 #include "Gimmicks/EquipItem.h"
 #include "Gimmicks/ResultTags.h"
 
+FName AEquipItem::GetAttachSocket() const
+{
+	return AttachSocket;
+}
+
+UStaticMesh* AEquipItem::GetEquipMesh() const
+{
+	// 自分のメッシュ部品に設定されているメッシュを返す
+	return Object->GetStaticMesh();
+}
+
+void AEquipItem::FinishEquip()
+{
+	// 装備成功通知を行う
+	// 結果を通知してからオブジェクトを破棄する
+	Notify(ResultTags::Equip);
+	Destroy();
+}
+
 void AEquipItem::OnStop(const FHitResult& HitResult)
 {
 	// 装備されずに壁や地面に当たった場合は、失敗通知を行う

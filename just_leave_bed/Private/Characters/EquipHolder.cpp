@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Characters/EquipHolder.h"
+#include "Characters/PlayerCharacter.h"
 #include "Gimmicks/EquipItem.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "DrawDebugHelpers.h"
@@ -33,6 +34,12 @@ void UEquipHolder::TryEquip()
 	{
 		// 見つけた装備品と距離をログに出す（EquipRadius の調整用）
 		UE_LOG(LogTemp, Log, TEXT("EquipHolder: Found item %s at distance %.2f"), *NearestItem->GetName(), FVector::Dist(GetOwner()->GetActorLocation(), NearestItem->GetActorLocation()));
+
+		// 装備処理を行う
+		if (AttachItem(NearestItem))
+		{
+			NearestItem->FinishEquip();
+		}
 	}
 }
 
@@ -76,4 +83,50 @@ AEquipItem* UEquipHolder::FindNearestItem() const
 	}
 
 	return NearestItem;
+}
+
+bool UEquipHolder::AttachItem(AEquipItem* Item)
+{
+	APlayerCharacter* PlayerCharacter = Cast<APlayerCharacter>(GetOwner());
+	if (!PlayerCharacter)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("EquipHolder: Owner is not a PlayerCharacter."));
+		return false;
+	}
+
+	// マネキンではなく見た目の体に付ける
+	USkeletalMeshComponent* VisualMesh = PlayerCharacter->GetVisualMesh();
+	if (!VisualMesh)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("EquipHolder: PlayerCharacter has no VisualMesh."));
+		return false;
+	}
+
+	UStaticMesh* EquipMesh = Item->GetEquipMesh();
+	if (!EquipMesh)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("EquipHolder: %s has no mesh to equip."), *Item->GetName());
+		return false;
+	}
+
+	FName Socket = Item->GetAttachSocket();
+	if (!VisualMesh->DoesSocketExist(Socket))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("EquipHolder: Socket %s not found on VisualMesh."), *Socket.ToString());
+		return false;
+	}
+
+	// 飛んできた物体はギミック側で消されるため、キャラ側に新しく見た目の部品を作って付ける
+	UStaticMeshComponent* NewMeshComp = NewObject<UStaticMeshComponent>(PlayerCharacter);
+	NewMeshComp->SetStaticMesh(EquipMesh);
+	// 付けた装備が他のものに当たらないようにする
+	NewMeshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	// ソケットで調整した大きさも反映させる（スケルトンエディタのプレビューと同じ見た目にする）
+	// （同じソケットに付くすべてのアイテムのスケールに影響があるが、現状頭のソケットに付くのは帽子だけなので問題ない）
+	NewMeshComp->AttachToComponent(VisualMesh, FAttachmentTransformRules::SnapToTargetIncludingScale, Socket);
+	// 実行中に作った部品は登録しないと表示されない
+	NewMeshComp->RegisterComponent();
+
+	UE_LOG(LogTemp, Log, TEXT("EquipHolder: Equipped %s to %s."), *Item->GetName(), *Socket.ToString());
+	return true;
 }

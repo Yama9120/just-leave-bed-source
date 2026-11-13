@@ -14,7 +14,15 @@ class JUST_LEAVE_BED_API AEquipItem : public AMovingObject
 {
 	GENERATED_BODY()
 
+public:
+	FName GetAttachSocket() const;
+	UStaticMesh* GetEquipMesh() const;
+	void FinishEquip();
+
 protected:
 	virtual void OnStop(const FHitResult& HitResult) override;
 	virtual void LifeSpanExpired() override;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Equip")
+	FName AttachSocket;
 };

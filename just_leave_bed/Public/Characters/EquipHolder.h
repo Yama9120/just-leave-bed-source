@@ -27,6 +27,7 @@ protected:
 
 private:
 	AEquipItem* FindNearestItem() const;
+	bool AttachItem(AEquipItem* Item);
 
 	float LastMissTime = 0.f; // 最後に範囲外で装備しようとした時刻
 };
