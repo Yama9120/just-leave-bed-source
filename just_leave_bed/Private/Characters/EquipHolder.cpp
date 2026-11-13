@@ -3,6 +3,7 @@
 #include "Characters/EquipHolder.h"
 #include "Characters/PlayerCharacter.h"
 #include "Gimmicks/EquipItem.h"
+#include "System/RetrySubsystem.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "DrawDebugHelpers.h"
 
@@ -41,6 +42,21 @@ void UEquipHolder::TryEquip()
 			NearestItem->FinishEquip();
 		}
 	}
+}
+
+void UEquipHolder::BeginPlay()
+{
+	Super::BeginPlay();
+
+	URetrySubsystem* RetrySubsystem = GetWorld()->GetSubsystem<URetrySubsystem>();
+	if (!RetrySubsystem)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("EquipHolder: RetrySubsystem not found."));
+		return;
+	}
+
+	RetrySubsystem->OnRetryStarted.AddDynamic(this, &UEquipHolder::HandleRetryStarted);
+	RetrySubsystem->OnCheckpointReached.AddDynamic(this, &UEquipHolder::HandleCheckpointReached);
 }
 
 AEquipItem* UEquipHolder::FindNearestItem() const
@@ -127,6 +143,32 @@ bool UEquipHolder::AttachItem(AEquipItem* Item)
 	// 実行中に作った部品は登録しないと表示されない
 	NewMeshComp->RegisterComponent();
 
+	// PendingMeshes に保持しておくことで、リトライ時に消すことができる
+	PendingMeshes.Add(NewMeshComp);
+
 	UE_LOG(LogTemp, Log, TEXT("EquipHolder: Equipped %s to %s."), *Item->GetName(), *Socket.ToString());
 	return true;
+}
+
+void UEquipHolder::HandleRetryStarted()
+{
+	UE_LOG(LogTemp, Log, TEXT("EquipHolder: Retry started. Removing %d pending item(s)."), PendingMeshes.Num());
+
+	// リトライ時に PendingMeshes に保持している装備品の見た目を消す
+	for (UStaticMeshComponent* MeshComp : PendingMeshes)
+	{
+		if (MeshComp)
+		{
+			MeshComp->DestroyComponent();
+		}
+	}
+	PendingMeshes.Empty();
+}
+
+void UEquipHolder::HandleCheckpointReached()
+{
+	UE_LOG(LogTemp, Log, TEXT("EquipHolder: Checkpoint reached. Confirming %d item(s)."), PendingMeshes.Num());
+
+	// 確定した装備は一覧から外すだけで、キャラには付けたまま
+	PendingMeshes.Empty();
 }
