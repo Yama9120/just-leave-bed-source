@@ -3,9 +3,18 @@
 #include "Gimmicks/Gimmick.h"
 #include "System/RetrySubsystem.h"
 
+void AGimmick::SetGimmickEnabled(bool bNewEnabled)
+{
+	bEnabled = bNewEnabled;
+	UE_LOG(LogTemp, Log, TEXT("Gimmick: %s %s."), *GetName(), bEnabled ? TEXT("enabled") : TEXT("disabled"));
+}
+
 void AGimmick::BeginPlay()
 {
 	Super::BeginPlay();
+
+	// ギミックの有効状態を、エディタで選んだ最初の状態にする
+	bEnabled = bStartEnabled;
 
 	URetrySubsystem* RetrySubsystem = GetWorld()->GetSubsystem<URetrySubsystem>();
 	if (!RetrySubsystem)
@@ -44,7 +53,12 @@ void AGimmick::StopGimmick_Implementation()
 
 void AGimmick::OnPlayerEnter(APlayerCharacter* Player)
 {
-	if (bRunning)
+	if (!bEnabled)
+	{
+		UE_LOG(LogTemp, Log, TEXT("Gimmick: %s is disabled. Ignored player enter."), *GetName());
+		return;
+	}
+	else if (bRunning)
 	{
 		return;
 	}
@@ -57,6 +71,9 @@ void AGimmick::OnPlayerEnter(APlayerCharacter* Player)
 
 void AGimmick::HandleSectionEnd()
 {
+	// 区間が終わったら、他から切り替えられた状態も最初に戻す（まだ始まっていないギミックも戻すため、bRunning の判定より前に書く）
+	bEnabled = bStartEnabled;
+
 	if (!bRunning)
 	{
 		return;

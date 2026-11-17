@@ -14,6 +14,10 @@ class JUST_LEAVE_BED_API AGimmick : public APlayerTrigger
 {
 	GENERATED_BODY()
 
+public:
+	UFUNCTION(BlueprintCallable, Category = "Gimmick")
+	void SetGimmickEnabled(bool bNewEnabled);
+
 protected:
 	void BeginPlay() override;
 	void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
@@ -30,7 +34,13 @@ protected:
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly)
 	bool bRunning = false;
 
+	UPROPERTY(EditAnywhere, Category = "Gimmick")
+	bool bStartEnabled = true;
+
 private:
 	UFUNCTION()
 	void HandleSectionEnd();
+
+	UPROPERTY(VisibleInstanceOnly)
+	bool bEnabled = true;
 };
