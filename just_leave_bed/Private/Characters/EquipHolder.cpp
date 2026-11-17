@@ -5,7 +5,6 @@
 #include "Gimmicks/EquipItem.h"
 #include "System/RetrySubsystem.h"
 #include "Kismet/KismetSystemLibrary.h"
-#include "DrawDebugHelpers.h"
 
 UEquipHolder::UEquipHolder()
 {
@@ -33,14 +32,12 @@ void UEquipHolder::TryEquip()
 	}
 	else
 	{
-		// 見つけた装備品と距離をログに出す（EquipRadius の調整用）
-		UE_LOG(LogTemp, Log, TEXT("EquipHolder: Found item %s at distance %.2f"), *NearestItem->GetName(), FVector::Dist(GetOwner()->GetActorLocation(), NearestItem->GetActorLocation()));
-
-		// 装備処理を行う
+		// 見た目を付けられたら、装備品に Result.Equip を通知して消す
 		if (AttachItem(NearestItem))
 		{
 			NearestItem->FinishEquip();
 		}
+		// 付けられなかったとき（設定ミス）は装備したことにせず、そのまま飛ばす
 	}
 }
 
@@ -74,10 +71,6 @@ AEquipItem* UEquipHolder::FindNearestItem() const
 
 	// キャラを中心に、半径 EquipRadius の球に重なっている AEquipItem を集める
 	UKismetSystemLibrary::SphereOverlapActors(GetWorld(), CharacterLocation, EquipRadius, ObjectTypes, AEquipItem::StaticClass(), IgnoreActors, OutActors);
-
-	// ---- 半径の調整用。調整が終わったら消す ----
-	DrawDebugSphere(GetWorld(), GetOwner()->GetActorLocation(), EquipRadius, 16, FColor::Green, false, 1.f);
-	// ---- 半径の調整用。調整が終わったら消す ----
 
 	// 集めた中からキャラに一番近い装備品を選ぶ
 	AEquipItem* NearestItem = nullptr;
