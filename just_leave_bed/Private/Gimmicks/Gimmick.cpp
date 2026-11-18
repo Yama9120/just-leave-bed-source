@@ -51,6 +51,20 @@ void AGimmick::StopGimmick_Implementation()
 {
 }
 
+void AGimmick::CompleteGimmick()
+{
+	// ミスで物が消えたときに完了と判定しないよう、ミス処理の最中は完了にしない
+	URetrySubsystem* RetrySubsystem = GetWorld()->GetSubsystem<URetrySubsystem>();
+	if (RetrySubsystem && RetrySubsystem->IsMissInProgress())
+	{
+		UE_LOG(LogTemp, Log, TEXT("Gimmick: %s completion ignored during miss."), *GetName());
+		return;
+	}
+
+	UE_LOG(LogTemp, Log, TEXT("Gimmick: %s completed."), *GetName());
+	OnCompleted.Broadcast();
+}
+
 void AGimmick::OnPlayerEnter(APlayerCharacter* Player)
 {
 	if (!bEnabled)

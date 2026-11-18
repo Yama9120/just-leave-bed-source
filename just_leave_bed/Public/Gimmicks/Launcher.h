@@ -17,9 +17,16 @@ class JUST_LEAVE_BED_API ALauncher : public AGimmick
 	GENERATED_BODY()
 
 protected:
+	virtual void BeginPlay() override;
 	virtual void Start_Implementation() override;
 	virtual void StopGimmick_Implementation() override;
 
 	UPROPERTY(EditInstanceOnly)
 	TArray<TObjectPtr<ALaunchPoint>> LaunchPoints;
+
+private:
+	UFUNCTION()
+	void HandlePointFinished();
+
+	int32 FinishedCount;
 };

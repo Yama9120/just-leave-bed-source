@@ -9,6 +9,8 @@
 class AMovingObject;
 class UArrowComponent;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnLaunchFinished);
+
 UCLASS()
 class JUST_LEAVE_BED_API ALaunchPoint : public AActor
 {
@@ -23,6 +25,8 @@ public:
 	void Launch();
 	UFUNCTION(BlueprintCallable)
 	void StopLaunch();
+
+	FOnLaunchFinished OnLaunchFinished;
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
@@ -43,8 +47,15 @@ protected:
 private:
 	void OnTimer();
 
+	UFUNCTION()
+	void HandleObjectDestroyed(AActor* DestroyedActor);
+	void CheckFinished();
+
 	TArray<TWeakObjectPtr<AMovingObject>> SpawnedObjects;
 
 	FTimerHandle Timer;
 	int32 FireCount = 0;
+
+	int32 LaunchedCount;
+	bool bLaunching = false;
 };

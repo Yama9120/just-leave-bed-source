@@ -27,6 +27,9 @@ public:
 	void HandleResult(FGameplayTag ResultTag);
 	void RegisterCheckpoint(const FTransform& Transform);
 
+	// ミス処理の最中か（ミスで物が消えたことを、ギミックが完了と判定しないために使う）
+	bool IsMissInProgress() const { return bMissInProgress; }
+
 	UPROPERTY(BlueprintAssignable)
 	FOnGameOver OnGameOver;
 	UPROPERTY(BlueprintAssignable)

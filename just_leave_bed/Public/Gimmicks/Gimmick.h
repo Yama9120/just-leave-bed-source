@@ -6,6 +6,8 @@
 #include "Items/PlayerTrigger.h"
 #include "Gimmick.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGimmickCompleted);
+
 /**
  *
  */
@@ -18,6 +20,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Gimmick")
 	void SetGimmickEnabled(bool bNewEnabled);
 
+	UPROPERTY(BlueprintAssignable)
+	FOnGimmickCompleted OnCompleted;
+
 protected:
 	void BeginPlay() override;
 	void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
@@ -28,6 +33,7 @@ protected:
 	UFUNCTION(BlueprintNativeEvent)
 	void StopGimmick();
 	virtual void StopGimmick_Implementation();
+	void CompleteGimmick();
 
 	virtual void OnPlayerEnter(APlayerCharacter* Player) override final;
 
