@@ -45,8 +45,12 @@ void ABlockingWall::Start_Implementation()
 
 void ABlockingWall::StopGimmick_Implementation()
 {
-	// ギミックが終了したときに壁を非表示にする
-	SetWallVisible(false);
+	// ミニゲームの１区間が終了した後に壁を非表示にするかどうかの設定に従う
+	if (bHideOnSectionEnd)
+	{
+		// ギミックが終了したときに壁を非表示にする
+		SetWallVisible(false);
+	}
 }
 
 void ABlockingWall::HandleTargetCompleted()

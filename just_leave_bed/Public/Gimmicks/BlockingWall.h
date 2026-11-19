@@ -26,6 +26,8 @@ protected:
 	TObjectPtr<UStaticMeshComponent> WallMesh;
 	UPROPERTY(EditInstanceOnly, Category = "Gimmick")
 	TObjectPtr<AGimmick> TargetGimmick;
+	UPROPERTY(EditAnywhere, Category = "Gimmick")
+	bool bHideOnSectionEnd = true; // クリアしたステージにもどれないようにするために、ギミックの区間が終わったら壁を非表示にするかどうかの設定
 
 private:
 	UFUNCTION()
